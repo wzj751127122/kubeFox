@@ -1,0 +1,35 @@
+app:
+  # name: "web"
+  # mode: "dev"
+  port: 8081
+  version: "1.0"
+  pod_logtail: 3000
+  log_mode: false
+  # start_time: "2023-01-02"
+  # machine_id: 1
+
+# auth:
+#   jwt_expire: 8760
+
+# log:
+#   level: "debug"
+#   filename: "web.log"
+#   max_size: 100
+#   max_age: 30
+#   max_backups: 7
+
+mysql:
+  host: "localhost"
+  port: 3306
+  dbname: "k8s"
+  user: "root"
+  password: "123456"
+  Max_OpenConns: 20
+  Max_IdleConns: 10
+
+# redis:
+#   host: "127.0.0.1"
+#   port: 6379
+#   db: 0
+#   password: ""
+#   PoolSize: 20
