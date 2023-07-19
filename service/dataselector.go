@@ -151,6 +151,29 @@ func (d deploymentCell) GetName() string {
 	return d.Name
 }
 
+type daemonSetCell appsv1.DaemonSet
+
+func (d daemonSetCell) GetCreation() time.Time {
+
+	return d.CreationTimestamp.Time
+}
+
+func (d daemonSetCell) GetName() string {
+
+	return d.Name
+}
+
+type statefulSetCell appsv1.StatefulSet
+
+func (d statefulSetCell) GetCreation() time.Time {
+
+	return d.CreationTimestamp.Time
+}
+
+func (d statefulSetCell) GetName() string {
+
+	return d.Name
+}
 
 type ingressCell nwv1.Ingress
 
@@ -174,3 +197,83 @@ func (s serviceCell) GetName() string {
 
 	return s.Name
 }
+
+type nodeCell corev1.Node
+
+func (s nodeCell) GetCreation() time.Time {
+
+	return s.CreationTimestamp.Time
+}
+
+func (s nodeCell) GetName() string {
+
+	return s.Name
+}
+
+
+type namespaceCell corev1.Namespace
+
+func (n namespaceCell) GetCreation() time.Time {
+
+	return n.CreationTimestamp.Time
+}
+
+func (n namespaceCell) GetName() string {
+
+	return n.Name
+}
+
+
+type persistentvolumesCell corev1.PersistentVolume
+
+func (p persistentvolumesCell) GetCreation() time.Time {
+
+	return p.CreationTimestamp.Time
+}
+
+func (p persistentvolumesCell) GetName() string {
+
+	return p.Name
+}
+
+
+type configmapCell corev1.ConfigMap
+
+func (c configmapCell) GetCreation() time.Time {
+
+	return c.CreationTimestamp.Time
+}
+
+func (c configmapCell) GetName() string {
+
+	return c.Name
+}
+
+
+
+type persistentVolumeClaimCell corev1.PersistentVolumeClaim
+
+func (p persistentVolumeClaimCell) GetCreation() time.Time {
+
+	return p.CreationTimestamp.Time
+}
+
+func (p persistentVolumeClaimCell) GetName() string {
+
+	return p.Name
+}
+
+
+type secretCell corev1.Secret
+
+func (s secretCell) GetCreation() time.Time {
+
+	return s.CreationTimestamp.Time
+}
+
+func (s secretCell) GetName() string {
+
+	return s.Name
+}
+
+

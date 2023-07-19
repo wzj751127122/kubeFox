@@ -233,3 +233,52 @@ func (d *deployment) RestartDeployment(c *gin.Context) {
 		"data": nil,
 	})
 }
+
+
+//更新deployment
+func (d *deployment)UpdateDeployment(c *gin.Context)  {
+	params := new(struct{
+		content   string `json:"content"`
+		namespace string `json:"namespace"`
+	})
+
+	err := c.ShouldBindJSON(params)
+	if err != nil {
+		logger.Error("Bind绑定参数失败" + err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"msg":  "Bind绑定参数失败" + err.Error(),
+			"data": nil,
+		})
+		return
+	}
+
+	err = service.Deployment.UpdateDeployment(params.content,params.namespace)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"msg":  err.Error(),
+			"data": nil,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"msg":  "更新deployment成功",
+		"data": nil,
+	})
+}
+
+
+func (d *deployment) GetDeploymentNumPreNS(c *gin.Context) {
+	data, err := service.Deployment.GetDeploymentNumNp()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"msg":  err.Error(),
+			"data": nil,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"msg":  "更新deployment成功",
+		"data": data,
+	})
+
+}

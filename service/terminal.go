@@ -190,9 +190,9 @@ func (t *TerminalSession) Close() {
 func (t *TerminalSession) Next() *remotecommand.TerminalSize {
 
 	select {
-	case size := <- t.sizeChan:
+	case size := <-t.sizeChan:
 		return &size
-	case <- t.doneChan:
+	case <-t.doneChan:
 		return nil
 	}
 }
