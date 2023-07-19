@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"k8s-platform/middle"
 	"k8s-platform/service"
 	"net/http"
 
@@ -257,4 +258,22 @@ func (p *pod) UpdatePod(c *gin.Context) {
 		"data": nil,
 	})
 
+}
+
+func (p *pod) WebShell(ctx *gin.Context) {
+	params := new(struct {
+		Namespace string `form:"namespace"`
+		Pod       string `form:"pod_name"`
+		Container string `form:"container_name"`
+	})
+	err := ctx.ShouldBind(params)
+	if err != nil {
+		logger.Error("Bind绑定参数失败" + err.Error())
+		middle.ResponseError(ctx, middle.CodeServerBusy)
+		return
+	}
+	service.Terminal.WsHandler(ctx.Writer,ctx.Request)
+	// if err != nil {
+	// 	middle.ResponseError(ctx, middle.CodeServerBusy)
+	// }
 }
