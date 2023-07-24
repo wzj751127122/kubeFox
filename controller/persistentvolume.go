@@ -25,7 +25,7 @@ type persistentVolume struct{}
 // @Router       /api/k8s/spersistentvolume/del [delete]
 func (n *persistentVolume) DeletePersistentVolume(ctx *gin.Context) {
 	params := new(struct {
-		Name string `json:"name" form:"name" comment:"命名空间名称" validate:"required"`
+		Name string `json:"name" form:"name" comment:"命名空间名称" binding:"required"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {
@@ -55,9 +55,9 @@ func (n *persistentVolume) DeletePersistentVolume(ctx *gin.Context) {
 // @Router       /api/k8s/persistentvolume/list [get]
 func (n *persistentVolume) GetPersistentVolumeList(ctx *gin.Context) {
 	params := new(struct {
-		FilterName string `json:"filter_name" form:"filter_name" validate:"" comment:"过滤名"`
-		Limit      int    `json:"limit" form:"limit" validate:"" comment:"分页限制"`
-		Page       int    `json:"page" form:"page" validate:"" comment:"页码"`
+		FilterName string `json:"filter_name" form:"filter_name" binding:"" comment:"过滤名"`
+		Limit      int    `json:"limit" form:"limit" binding:"" comment:"分页限制"`
+		Page       int    `json:"page" form:"page" binding:"" comment:"页码"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {
@@ -86,7 +86,7 @@ func (n *persistentVolume) GetPersistentVolumeList(ctx *gin.Context) {
 // @Router       /api/k8s/persistentvolume/detail [get]
 func (n *persistentVolume) GetPersistentVolumeDetail(ctx *gin.Context) {
 	params := new(struct {
-		Name string `json:"name" form:"name" comment:"命名空间名称" validate:"required"`
+		Name string `json:"name" form:"name" comment:"命名空间名称" binding:"required"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {

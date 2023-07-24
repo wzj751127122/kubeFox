@@ -27,9 +27,9 @@ type node struct{}
 // @Router       /api/k8s/node/list [get]
 func (n *node) GetNodeList(ctx *gin.Context) {
 	params := new(struct {
-		FilterName string `json:"filter_name" form:"filter_name" validate:"" comment:"过滤名"`
-		Limit      int    `json:"limit" form:"limit" validate:"" comment:"分页限制"`
-		Page       int    `json:"page" form:"page" validate:"" comment:"页码"`
+		FilterName string `json:"filter_name" form:"filter_name" binding:"" comment:"过滤名"`
+		Limit      int    `json:"limit" form:"limit" binding:"" comment:"分页限制"`
+		Page       int    `json:"page" form:"page" binding:"" comment:"页码"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {
@@ -59,7 +59,7 @@ func (n *node) GetNodeList(ctx *gin.Context) {
 // @Router       /api/k8s/node/detail [get]
 func (n *node) GetNodeDetail(ctx *gin.Context) {
 	params := new(struct {
-		Name string `json:"name" form:"name" comment:"Node名称" validate:"required"`
+		Name string `json:"name" form:"name" comment:"Node名称" binding:"required"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {

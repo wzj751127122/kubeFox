@@ -21,7 +21,7 @@ var Terminal terminal
 
 type terminal struct{}
 
-func (t *terminal) WsHandler(w http.ResponseWriter, r *http.Request) {
+func (t *terminal) WsHandler(w http.ResponseWriter, r *http.Request){
 
 	config, err := clientcmd.BuildConfigFromFlags("", clientcmd.RecommendedHomeFile)
 	if err != nil {

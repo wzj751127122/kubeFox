@@ -3,6 +3,7 @@ package controller
 import (
 	"k8s-platform/middle"
 	"k8s-platform/service"
+
 	"github.com/gin-gonic/gin"
 	"github.com/wonderivan/logger"
 )
@@ -25,8 +26,8 @@ type secret struct{}
 // @Router       /api/k8s/Secret/del [delete]
 func (s *secret) DeleteSecret(ctx *gin.Context) {
 	params := new(struct {
-		Name      string `json:"name" form:"name" comment:"有状态控制器名称" validate:"required"`
-		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" validate:"required"`
+		Name      string `json:"name" form:"name" comment:"有状态控制器名称" binding:"required"`
+		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" binding:"required"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {
@@ -56,8 +57,8 @@ func (s *secret) DeleteSecret(ctx *gin.Context) {
 // @Router       /api/k8s/secret/update [put]
 func (s *secret) UpdateSecret(ctx *gin.Context) {
 	params := new(struct {
-		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" validate:"required"`
-		Content   string `json:"content" form:"content" validate:"required" comment:"更新内容"`
+		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" binding:"required"`
+		Content   string `json:"content" form:"content" binding:"required" comment:"更新内容"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {
@@ -88,10 +89,10 @@ func (s *secret) UpdateSecret(ctx *gin.Context) {
 // @Router       /api/k8s/Secret/list [get]
 func (s *secret) GetSecretList(ctx *gin.Context) {
 	params := new(struct {
-		FilterName string `json:"filter_name" form:"filter_name" validate:"" comment:"过滤名"`
-		NameSpace  string `json:"namespace" form:"namespace" validate:"" comment:"命名空间"`
-		Limit      int    `json:"limit" form:"limit" validate:"" comment:"分页限制"`
-		Page       int    `json:"page" form:"page" validate:"" comment:"页码"`
+		FilterName string `json:"filter_name" form:"filter_name" binding:"" comment:"过滤名"`
+		NameSpace  string `json:"namespace" form:"namespace" binding:"" comment:"命名空间"`
+		Limit      int    `json:"limit" form:"limit" binding:"" comment:"分页限制"`
+		Page       int    `json:"page" form:"page" binding:"" comment:"页码"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {
@@ -121,8 +122,8 @@ func (s *secret) GetSecretList(ctx *gin.Context) {
 // @Router       /api/k8s/Secret/detail [get]
 func (s *secret) GetSecretDetail(ctx *gin.Context) {
 	params := new(struct {
-		Name      string `json:"name" form:"name" comment:"有状态控制器名称" validate:"required"`
-		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" validate:"required"`
+		Name      string `json:"name" form:"name" comment:"有状态控制器名称" binding:"required"`
+		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" binding:"required"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {

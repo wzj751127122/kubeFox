@@ -52,8 +52,8 @@ func (s *serviceController) CreateService(ctx *gin.Context) {
 // @Router       /api/k8s/service/del [delete]
 func (s *serviceController) DeleteService(ctx *gin.Context) {
 	params := new(struct {
-		Name      string `json:"name" form:"name" comment:"服务名称" validate:"required"`
-		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" validate:"required"`
+		Name      string `json:"name" form:"name" comment:"服务名称" binding:"required"`
+		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" binding:"required"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {
@@ -83,8 +83,8 @@ func (s *serviceController) DeleteService(ctx *gin.Context) {
 // @Router       /api/k8s/service/update [put]
 func (s *serviceController) UpdateService(ctx *gin.Context) {
 	params := new(struct {
-		Content   string `json:"content" validate:"required" comment:"更新内容"`
-		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" validate:"required"`
+		Content   string `json:"content" binding:"required" comment:"更新内容"`
+		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" binding:"required"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {
@@ -115,10 +115,10 @@ func (s *serviceController) UpdateService(ctx *gin.Context) {
 // @Router       /api/k8s/service/list [get]
 func (s *serviceController) GetServiceList(ctx *gin.Context) {
 	params := new(struct {
-		FilterName string `json:"filter_name" form:"filter_name" validate:"" comment:"过滤名"`
-		NameSpace  string `json:"namespace" form:"namespace" validate:"" comment:"命名空间"`
-		Limit      int    `json:"limit" form:"limit" validate:"" comment:"分页限制"`
-		Page       int    `json:"page" form:"page" validate:"" comment:"页码"`
+		FilterName string `json:"filter_name" form:"filter_name" binding:"" comment:"过滤名"`
+		NameSpace  string `json:"namespace" form:"namespace" binding:"" comment:"命名空间"`
+		Limit      int    `json:"limit" form:"limit" binding:"" comment:"分页限制"`
+		Page       int    `json:"page" form:"page" binding:"" comment:"页码"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {
@@ -148,8 +148,8 @@ func (s *serviceController) GetServiceList(ctx *gin.Context) {
 // @Router       /api/k8s/service/detail [get]
 func (s *serviceController) GetServiceDetail(ctx *gin.Context) {
 	params := new(struct {
-		Name      string `json:"name" form:"name" comment:"服务名称" validate:"required"`
-		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" validate:"required"`
+		Name      string `json:"name" form:"name" comment:"服务名称" binding:"required"`
+		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" binding:"required"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {

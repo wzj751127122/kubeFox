@@ -52,9 +52,9 @@ func (i *ingressController) CreateIngress(ctx *gin.Context) {
 // @Success       200  {object}  middleware.Response"{"code": 200, msg="","data": "删除成功}"
 // @Router       /api/k8s/ingress/del [delete]
 func (i *ingressController) DeleteIngress(ctx *gin.Context) {
-	params := new(struct{
-		Name      string `json:"name" form:"name" comment:"服务名称" validate:"required"`
-		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" validate:"required"`
+	params := new(struct {
+		Name      string `json:"name" form:"name" comment:"服务名称" binding:"required"`
+		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" binding:"required"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {
@@ -84,9 +84,9 @@ func (i *ingressController) DeleteIngress(ctx *gin.Context) {
 // @Success       200  {object}  middleware.Response"{"code": 200, msg="","data": "更新成功}"
 // @Router       /api/k8s/ingress/update [put]
 func (i *ingressController) UpdateIngress(ctx *gin.Context) {
-	params := new(struct{
-		Content   string `json:"content" form:"content" validate:"required" comment:"更新内容"`
-		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" validate:"required"`
+	params := new(struct {
+		Content   string `json:"content" form:"content" binding:"required" comment:"更新内容"`
+		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" binding:"required"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {
@@ -117,11 +117,11 @@ func (i *ingressController) UpdateIngress(ctx *gin.Context) {
 // @Success       200  {object}  middleware.Response"{"code": 200, msg="","data":""  }"
 // @Router       /api/k8s/ingress/list [get]
 func (i *ingressController) GetIngressList(ctx *gin.Context) {
-	params := new(struct{
-		FilterName string `json:"filter_name" form:"filter_name" validate:"" comment:"过滤名"`
-		NameSpace  string `json:"namespace" form:"namespace" validate:"" comment:"命名空间"`
-		Limit      int    `json:"limit" form:"limit" validate:"" comment:"分页限制"`
-		Page       int    `json:"page" form:"page" validate:"" comment:"页码"`
+	params := new(struct {
+		FilterName string `json:"filter_name" form:"filter_name" binding:"" comment:"过滤名"`
+		NameSpace  string `json:"namespace" form:"namespace" binding:"" comment:"命名空间"`
+		Limit      int    `json:"limit" form:"limit" binding:"" comment:"分页限制"`
+		Page       int    `json:"page" form:"page" binding:"" comment:"页码"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {
@@ -151,9 +151,9 @@ func (i *ingressController) GetIngressList(ctx *gin.Context) {
 // @Success      200        {object}  middleware.Response"{"code": 200, msg="","data":""  }"
 // @Router       /api/k8s/ingress/detail [get]
 func (i *ingressController) GetIngressDetail(ctx *gin.Context) {
-	params := new(struct{
-		Name      string `json:"name" form:"name" comment:"服务名称" validate:"required"`
-		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" validate:"required"`
+	params := new(struct {
+		Name      string `json:"name" form:"name" comment:"服务名称" binding:"required"`
+		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" binding:"required"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {

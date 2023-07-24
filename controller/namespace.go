@@ -25,7 +25,7 @@ type namespace struct{}
 // @Router       /api/k8s/namespace/create [put]
 func (n *namespace) CreateNameSpace(ctx *gin.Context) {
 	params := new(struct {
-		Name string `json:"name" form:"name" comment:"命名空间名称" validate:"required"`
+		Name string `json:"name" form:"name" comment:"命名空间名称" binding:"required"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {
@@ -54,7 +54,7 @@ func (n *namespace) CreateNameSpace(ctx *gin.Context) {
 // @Router       /api/k8s/namespace/del [delete]
 func (n *namespace) DeleteNameSpace(ctx *gin.Context) {
 	params := new(struct {
-		Name string `json:"name" form:"name" comment:"命名空间名称" validate:"required"`
+		Name string `json:"name" form:"name" comment:"命名空间名称" binding:"required"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {
@@ -83,10 +83,10 @@ func (n *namespace) DeleteNameSpace(ctx *gin.Context) {
 // @Success       200  {object}  middleware.Response"{"code": 200, msg="","data": service.NameSpaceResp}"
 // @Router       /api/k8s/namespace/list [get]
 func (n *namespace) GetNameSpaceList(ctx *gin.Context) {
-	params := new(struct{
-		FilterName string `json:"filter_name" form:"filter_name" validate:"" comment:"过滤名"`
-		Limit      int    `json:"limit" form:"limit" validate:"" comment:"分页限制"`
-		Page       int    `json:"page" form:"page" validate:"" comment:"页码"`
+	params := new(struct {
+		FilterName string `json:"filter_name" form:"filter_name" binding:"" comment:"过滤名"`
+		Limit      int    `json:"limit" form:"limit" binding:"" comment:"分页限制"`
+		Page       int    `json:"page" form:"page" binding:"" comment:"页码"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {
@@ -114,8 +114,8 @@ func (n *namespace) GetNameSpaceList(ctx *gin.Context) {
 // @Success      200        {object}  middleware.Response"{"code": 200, msg="","data":data }"
 // @Router       /api/k8s/namespace/detail [get]
 func (n *namespace) GetNameSpaceDetail(ctx *gin.Context) {
-	params := new(struct{
-		Name string `json:"name" form:"name" comment:"命名空间名称" validate:"required"`
+	params := new(struct {
+		Name string `json:"name" form:"name" comment:"命名空间名称" binding:"required"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {

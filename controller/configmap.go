@@ -3,9 +3,10 @@ package controller
 import (
 	"k8s-platform/middle"
 
+	"k8s-platform/service"
+
 	"github.com/gin-gonic/gin"
 	"github.com/wonderivan/logger"
-	"k8s-platform/service"
 )
 
 var Configmap configmap
@@ -25,9 +26,9 @@ type configmap struct{}
 // @Success       200  {object}  middleware.Response"{"code": 200, msg="","data": "删除成功}"
 // @Router       /api/k8s/configmap/del [delete]
 func (s *configmap) DeleteConfigmap(ctx *gin.Context) {
-	params := new(struct{
-		Name      string `json:"name" form:"name" comment:"配置卷名称" validate:"required"`
-		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" validate:"required"`
+	params := new(struct {
+		Name      string `json:"name" form:"name" comment:"配置卷名称" binding:"required"`
+		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" binding:"required"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {
@@ -56,9 +57,9 @@ func (s *configmap) DeleteConfigmap(ctx *gin.Context) {
 // @Success       200  {object}  middleware.Response"{"code": 200, msg="","data": "更新成功}"
 // @Router       /api/k8s/configmap/update [put]
 func (s *configmap) UpdateConfigmap(ctx *gin.Context) {
-	params := new(struct{
-		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" validate:"required"`
-		Content   string `json:"content" form:"content" validate:"required" comment:"更新内容"`
+	params := new(struct {
+		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" binding:"required"`
+		Content   string `json:"content" form:"content" binding:"required" comment:"更新内容"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {
@@ -88,11 +89,11 @@ func (s *configmap) UpdateConfigmap(ctx *gin.Context) {
 // @Success       200  {object}  middleware.Response"{"code": 200, msg="","data": }"
 // @Router       /api/k8s/configmap/list [get]
 func (s *configmap) GetConfigmapList(ctx *gin.Context) {
-	params := new(struct{
-		FilterName string `json:"filter_name" form:"filter_name" validate:"" comment:"过滤名"`
-		NameSpace  string `json:"namespace" form:"namespace" validate:"" comment:"命名空间"`
-		Limit      int    `json:"limit" form:"limit" validate:"" comment:"分页限制"`
-		Page       int    `json:"page" form:"page" validate:"" comment:"页码"`
+	params := new(struct {
+		FilterName string `json:"filter_name" form:"filter_name" binding:"" comment:"过滤名"`
+		NameSpace  string `json:"namespace" form:"namespace" binding:"" comment:"命名空间"`
+		Limit      int    `json:"limit" form:"limit" binding:"" comment:"分页限制"`
+		Page       int    `json:"page" form:"page" binding:"" comment:"页码"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {
@@ -121,9 +122,9 @@ func (s *configmap) GetConfigmapList(ctx *gin.Context) {
 // @Success      200        {object}  middleware.Response"{"code": 200, msg="","data":v1.Deployment }"
 // @Router       /api/k8s/configmap/detail [get]
 func (s *configmap) GetConfigmapDetail(ctx *gin.Context) {
-	params := new(struct{
-		Name      string `json:"name" form:"name" comment:"配置卷名称" validate:"required"`
-		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" validate:"required"`
+	params := new(struct {
+		Name      string `json:"name" form:"name" comment:"配置卷名称" binding:"required"`
+		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" binding:"required"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {

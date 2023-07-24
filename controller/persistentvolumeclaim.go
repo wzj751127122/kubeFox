@@ -3,6 +3,7 @@ package controller
 import (
 	"k8s-platform/middle"
 	"k8s-platform/service"
+
 	"github.com/gin-gonic/gin"
 	"github.com/wonderivan/logger"
 )
@@ -24,9 +25,9 @@ type persistentVolumeClaim struct{}
 // @Success       200  {object}  middle.Response"{"code": 200, msg="","data": "删除成功}"
 // @Router       /api/k8s/persistentvolumeclaim/del [delete]
 func (s *persistentVolumeClaim) DeletePersistentVolumeClaim(ctx *gin.Context) {
-	params := new(struct{
-		Name      string `json:"name" form:"name" comment:"配置卷名称" validate:"required"`
-		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" validate:"required"`
+	params := new(struct {
+		Name      string `json:"name" form:"name" comment:"配置卷名称" binding:"required"`
+		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" binding:"required"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {
@@ -55,9 +56,9 @@ func (s *persistentVolumeClaim) DeletePersistentVolumeClaim(ctx *gin.Context) {
 // @Success       200  {object}  middle.Response"{"code": 200, msg="","data": "更新成功}"
 // @Router       /api/k8s/persistentvolumeclaim/update [put]
 func (s *persistentVolumeClaim) UpdatePersistentVolumeClaim(ctx *gin.Context) {
-	params := new(struct{
-		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" validate:"required"`
-		Content   string `json:"content" form:"content"  validate:"required" comment:"更新内容"`
+	params := new(struct {
+		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" binding:"required"`
+		Content   string `json:"content" form:"content"  binding:"required" comment:"更新内容"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {
@@ -87,11 +88,11 @@ func (s *persistentVolumeClaim) UpdatePersistentVolumeClaim(ctx *gin.Context) {
 // @Success       200  {object}  middle.Response"{"code": 200, msg="","data": }"
 // @Router       /api/k8s/persistentvolumeclaim/list [get]
 func (s *persistentVolumeClaim) GetPersistentVolumeClaimList(ctx *gin.Context) {
-	params := new(struct{
-		FilterName string `json:"filter_name" form:"filter_name" validate:"" comment:"过滤名"`
-		NameSpace  string `json:"namespace" form:"namespace" validate:"" comment:"命名空间"`
-		Limit      int    `json:"limit" form:"limit" validate:"" comment:"分页限制"`
-		Page       int    `json:"page" form:"page" validate:"" comment:"页码"`
+	params := new(struct {
+		FilterName string `json:"filter_name" form:"filter_name" binding:"" comment:"过滤名"`
+		NameSpace  string `json:"namespace" form:"namespace" binding:"" comment:"命名空间"`
+		Limit      int    `json:"limit" form:"limit" binding:"" comment:"分页限制"`
+		Page       int    `json:"page" form:"page" binding:"" comment:"页码"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {
@@ -120,9 +121,9 @@ func (s *persistentVolumeClaim) GetPersistentVolumeClaimList(ctx *gin.Context) {
 // @Success      200        {object}  middle.Response"{"code": 200, msg="","data":v1.Deployment }"
 // @Router       /api/k8s/persistentvolumeclaim/detail [get]
 func (s *persistentVolumeClaim) GetPersistentVolumeClaimDetail(ctx *gin.Context) {
-	params := new(struct{
-		Name      string `json:"name" form:"name" comment:"配置卷名称" validate:"required"`
-		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" validate:"required"`
+	params := new(struct {
+		Name      string `json:"name" form:"name" comment:"配置卷名称" binding:"required"`
+		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" binding:"required"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {

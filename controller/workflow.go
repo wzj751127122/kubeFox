@@ -51,7 +51,7 @@ func (w *workflow) CreateWorkFlow(ctx *gin.Context) {
 // @Success       200  {object}  middleware.Response"{"code": 200, msg="","data": "删除成功}"
 // @Router       /api/k8s/workflow/del [delete]
 func (w *workflow) DeleteWorkflow(ctx *gin.Context) {
-	params := new(struct{
+	params := new(struct {
 		ID int `json:"id" form:"id"`
 	})
 	err := ctx.ShouldBind(params)
@@ -81,11 +81,11 @@ func (w *workflow) DeleteWorkflow(ctx *gin.Context) {
 // @Success       200  {object}  middleware.Response"{"code": 200, msg="","data": }"
 // @Router       /api/k8s/workflow/list [get]
 func (w *workflow) GetWorkflowList(ctx *gin.Context) {
-	params := new(struct{
-		FilterName string `json:"filter_name" form:"filter_name" validate:"" comment:"过滤名"`
-		Limit      int    `json:"limit" form:"limit" validate:"" comment:"分页限制"`
-		Page       int    `json:"page" form:"page" validate:"" comment:"页码"`
-		Namespace	string   `json:"namespace" form:"namespace"`
+	params := new(struct {
+		FilterName string `json:"filter_name" form:"filter_name" binding:"" comment:"过滤名"`
+		Limit      int    `json:"limit" form:"limit" binding:"" comment:"分页限制"`
+		Page       int    `json:"page" form:"page" binding:"" comment:"页码"`
+		Namespace  string `json:"namespace" form:"namespace"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {
@@ -93,7 +93,7 @@ func (w *workflow) GetWorkflowList(ctx *gin.Context) {
 		middle.ResponseError(ctx, middle.CodeServerBusy)
 		return
 	}
-	data, err := service.Workflow.GetList(params.FilterName,params.Namespace,params.Limit,params.Page)
+	data, err := service.Workflow.GetList(params.FilterName, params.Namespace, params.Limit, params.Page)
 	if err != nil {
 		middle.ResponseError(ctx, middle.CodeServerBusy)
 		return
@@ -113,7 +113,7 @@ func (w *workflow) GetWorkflowList(ctx *gin.Context) {
 // @Success       200  {object}  middleware.Response"{"code": 200, msg="","data": }"
 // @Router       /api/k8s/workflow/id [get]
 func (w *workflow) GetWorkflowByID(ctx *gin.Context) {
-	params := new(struct{
+	params := new(struct {
 		ID int `json:"id" form:"id"`
 	})
 	err := ctx.ShouldBind(params)

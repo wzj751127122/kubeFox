@@ -1,6 +1,6 @@
 app:
   # name: "web"
-  # mode: "dev"
+  mode: "dev"
   port: 8081
   version: "1.0"
   pod_logtail: 3000
@@ -11,12 +11,12 @@ app:
 # auth:
 #   jwt_expire: 8760
 
-# log:
-#   level: "debug"
-#   filename: "web.log"
-#   max_size: 100
-#   max_age: 30
-#   max_backups: 7
+log:
+  level: "debug"
+  filename: "web.log"
+  max_size: 100
+  max_age: 30
+  max_backups: 7
 
 mysql:
   host: "localhost"

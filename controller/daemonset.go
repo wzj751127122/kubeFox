@@ -26,8 +26,8 @@ type daemonSet struct{}
 // @Router       /api/k8s/daemonset/del [delete]
 func (s *daemonSet) DeleteDaemonSet(ctx *gin.Context) {
 	params := new(struct {
-		Name      string `json:"name" form:"name" comment:"有状态控制器名称" validate:"required"`
-		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" validate:"required"`
+		Name      string `json:"name" form:"name" comment:"有状态控制器名称" binding:"required"`
+		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" binding:"required"`
 	})
 
 	err := ctx.ShouldBind(params)
@@ -61,8 +61,8 @@ func (s *daemonSet) DeleteDaemonSet(ctx *gin.Context) {
 // @Router       /api/k8s/daemonset/update [put]
 func (s *daemonSet) UpdateDaemonSet(ctx *gin.Context) {
 	params := new(struct {
-		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" validate:"required"`
-		Content   string `json:"content" validate:"required" comment:"更新内容"`
+		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" binding:"required"`
+		Content   string `json:"content" binding:"required" comment:"更新内容"`
 	})
 	err := ctx.ShouldBindJSON(params)
 	if err != nil {
@@ -95,10 +95,10 @@ func (s *daemonSet) UpdateDaemonSet(ctx *gin.Context) {
 // @Router       /api/k8s/daemonset/list [get]
 func (s *daemonSet) GetDaemonSetList(ctx *gin.Context) {
 	params := new(struct {
-		FilterName string `json:"filter_name" form:"filter_name" validate:"" comment:"过滤名"`
-		NameSpace  string `json:"namespace" form:"namespace" validate:"" comment:"命名空间"`
-		Limit      int    `json:"limit" form:"limit" validate:"" comment:"分页限制"`
-		Page       int    `json:"page" form:"page" validate:"" comment:"页码"`
+		FilterName string `json:"filter_name" form:"filter_name" binding:"" comment:"过滤名"`
+		NameSpace  string `json:"namespace" form:"namespace" binding:"" comment:"命名空间"`
+		Limit      int    `json:"limit" form:"limit" binding:"" comment:"分页限制"`
+		Page       int    `json:"page" form:"page" binding:"" comment:"页码"`
 	})
 
 	err := ctx.ShouldBind(params)
@@ -130,9 +130,9 @@ func (s *daemonSet) GetDaemonSetList(ctx *gin.Context) {
 // @Success      200        {object}  middleware.Response"{"code": 200, msg="","data":v1.Deployment }"
 // @Router       /api/k8s/daemonset/detail [get]
 func (s *daemonSet) GetDaemonSetDetail(ctx *gin.Context) {
-	params := new(struct{
-		Name      string `json:"name" form:"name" comment:"有状态控制器名称" validate:"required"`
-		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" validate:"required"`
+	params := new(struct {
+		Name      string `json:"name" form:"name" comment:"有状态控制器名称" binding:"required"`
+		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" binding:"required"`
 	})
 	err := ctx.ShouldBind(params)
 	if err != nil {

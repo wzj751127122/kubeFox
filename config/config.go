@@ -11,7 +11,7 @@ var Conf = new(AppConfigMap)
 type AppConfigMap struct {
 
 	*AppConfig   `mapstructure:"app"`
-	// *LogConfig   `mapstructure:"log"`
+	*LogConfig   `mapstructure:"log"`
 	*MysqlConfig `mapstructure:"mysql"`
 	// *RedisConfig `mapstructure:"redis"`
 }
@@ -19,7 +19,7 @@ type AppConfigMap struct {
 type AppConfig struct{
 
 	// Name      string `mapstructure:"name"`
-	// Mode      string `mapstructure:"mode"`
+	Mode      string `mapstructure:"mode"`
 	Version   string `mapstructure:"version"`
 	// StartTime string `mapstructure:"start_time"`
 	// MachineID int64  `mapstructure:"machine_id"`
@@ -51,15 +51,15 @@ type MysqlConfig struct{
 // 	PoolSize int	`mapstructure:"poolsize"`
 
 // }
-// type LogConfig struct{
+type LogConfig struct{
 
-// 	Level string
-//     Filename string
-// 	MaxSize int
-// 	MaxAge int
-// 	MaxBackups int
+	Level string
+    Filename string
+	MaxSize int
+	MaxAge int
+	MaxBackups int
 
-// }
+}
 
 func Init(filepath string) (err error) {
 
