@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"k8s-platform/app/opention"
+	"k8s-platform/config"
 	"k8s-platform/controller"
 	"k8s-platform/middle"
 	"k8s-platform/service"
@@ -12,7 +13,6 @@ import (
 	"time"
 
 	"os"
-
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
@@ -70,7 +70,7 @@ func Run(opt *opention.Options) error {
 	//初始化gin
 	r := gin.Default()
 	r.Use(middle.Cors())
-	r.Use(middle.JWTAuthMiddleware())
+	// r.Use(middle.JWTAuthMiddleware())
 	//初始化路由
 	controller.Router.InitApiRouter(r)
 	// 启动优雅服务
@@ -95,7 +95,7 @@ func runServer(opt *opention.Options) {
 
 	// Initializing the server in a goroutine so that it won't block the graceful shutdown handling below
 	go func() {
-		zap.L().Info("Success", zap.String("starting kubeFox server running on", "127.0.0.1"))
+		zap.L().Info("Success", zap.Int("starting kubeFox server running on", config.Conf.AppConfig.Port))
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			zap.L().Fatal("failed to listen kubeFox server: ", zap.Error(err))
 		}

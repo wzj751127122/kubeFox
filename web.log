@@ -18,3 +18,7 @@
 {"level":"INFO","time":"[kubeFox] 2023/07/24 - 19:33:22.793","caller":"app/server.go:98","msg":"Success","starting kubeFox server running on":"127.0.0.1"}
 {"level":"INFO","time":"[kubeFox] 2023/07/24 - 19:33:54.492","caller":"app/server.go:107","msg":"shutting kubeFox server down ..."}
 {"level":"INFO","time":"[kubeFox] 2023/07/24 - 19:33:54.493","caller":"app/server.go:117","msg":"kubeFox server exit successful"}
+{"level":"INFO","time":"[kubeFox] 2023/07/24 - 19:41:11.067","caller":"logger/logger.go:43","msg":"init logger success"}
+{"level":"INFO","time":"[kubeFox] 2023/07/24 - 19:41:11.137","caller":"app/server.go:98","msg":"Success","starting kubeFox server running on":8081}
+{"level":"INFO","time":"[kubeFox] 2023/07/24 - 19:48:15.014","caller":"app/server.go:107","msg":"shutting kubeFox server down ..."}
+{"level":"INFO","time":"[kubeFox] 2023/07/24 - 19:48:15.016","caller":"app/server.go:117","msg":"kubeFox server exit successful"}
