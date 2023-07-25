@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"k8s-platform/app/opention"
 	"k8s-platform/config"
-	"k8s-platform/controller"
 	"k8s-platform/middle"
+	"k8s-platform/router"
 	"k8s-platform/service"
 	"k8s-platform/utils"
 	"net/http"
@@ -21,7 +21,7 @@ import (
 )
 
 func NewServerCommand() *cobra.Command {
-	
+
 	opts, err := opention.NewOptions()
 	if err != nil {
 		zap.L().Fatal("unable to initialize command options: %v", zap.Any("err", err))
@@ -72,7 +72,8 @@ func Run(opt *opention.Options) error {
 	r.Use(middle.Cors())
 	// r.Use(middle.JWTAuthMiddleware())
 	//初始化路由
-	controller.Router.InitApiRouter(r)
+	// Router.InitApiRouter(r)
+	router.InitRouter(opt)
 	// 启动优雅服务
 	runServer(opt)
 	return nil

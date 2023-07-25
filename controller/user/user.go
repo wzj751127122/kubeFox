@@ -1,6 +1,8 @@
 package user
 
 import (
+
+
 	"k8s-platform/logic"
 	"k8s-platform/middle"
 	"k8s-platform/model"
@@ -8,8 +10,15 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+
+	// "github.com/go-playground/validator"
 	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 )
+
+var UserController userController
+
+type userController struct{}
 
 // Login godoc
 // @Summary 管理员登录
@@ -22,16 +31,25 @@ import (
 // @Success 200 {object} middleware.Response{data=dto.AdminLoginOut} "success"
 // @Router /api/user/login [post]
 func (u *userController) Login(ctx *gin.Context) {
-	params := new(model.AdminLoginInput)
+	// params := new(model.AdminLoginInput)
+	params := &model.AdminLoginInput{}
 	err := ctx.ShouldBind(params)
 	if err != nil {
+		// errs, ok := err.(validator.ValidationErrors)
+		// if !ok {
+		// 	middle.ResponseError(ctx, middle.CodeInvalidParam)
+		// 	return
+		// }
 		logger.Error("Bind绑定参数失败" + err.Error())
-		middle.ResponseError(ctx, middle.CodeServerBusy)
+		middle.ResponseError(ctx, middle.CodeInvalidParam)
 		return
 	}
+	// fmt.Println(params)
+	// fmt.Println("12312312312")
 	token, err := logic.Login(ctx, params)
 	if err != nil {
-		middle.ResponseErrorWithMsg(ctx, middle.CodeServerBusy, err)
+		zap.L().Error("login with error", zap.Error(err))
+		middle.ResponseError(ctx, middle.CodeInvalidPassword)
 		return
 	}
 	middle.ResponseSuccess(ctx, &model.AdminLoginOut{Token: token})
@@ -53,6 +71,7 @@ func (u *userController) LoginOut(ctx *gin.Context) {
 	}
 	cla, _ := claims.(*utils.CustomClaims)
 	if err := logic.LoginOut(ctx, cla.ID); err != nil {
+		zap.L().Error("login out with error", zap.Error(err))
 		middle.ResponseError(ctx, middle.CodeServerBusy)
 		return
 	}

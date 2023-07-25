@@ -8,14 +8,13 @@ import (
 	"gorm.io/gorm"
 )
 
-
 type AddSysMenusInput struct {
-	ParentId string `json:"parentId" comment:"父菜单ID" validate:"required"` // 父菜单ID
-	Name     string `json:"name"  comment:"路由name" validate:"required"`   // 路由name
-	Path     string `json:"path" comment:"路由path" validate:"required"`    // 路由path
-	Disabled bool   `json:"disabled" comment:"是否禁用" validate:"required"`  // 是否在列表隐藏
-	Hidden   bool   `json:"hidden" comment:"是否在列表隐藏" validate:"required"` // 是否在列表隐藏
-	Sort     int    `json:"sort" comment:"排序标记" validate:"required"`      // 排序标记
+	ParentId string `json:"parentId" comment:"父菜单ID" binding:"required"` // 父菜单ID
+	Name     string `json:"name"  comment:"路由name" binding:"required"`   // 路由name
+	Path     string `json:"path" comment:"路由path" binding:"required"`    // 路由path
+	Disabled bool   `json:"disabled" comment:"是否禁用" binding:"required"`  // 是否在列表隐藏
+	Hidden   bool   `json:"hidden" comment:"是否在列表隐藏" binding:"required"` // 是否在列表隐藏
+	Sort     int    `json:"sort" comment:"排序标记" binding:"required"`      // 排序标记
 	Meta
 }
 
@@ -33,7 +32,7 @@ type SysBaseMenuResponse struct {
 
 type AddMenuAuthorityInput struct {
 	Menus       []SysBaseMenu `json:"menus"`
-	AuthorityId uint                `json:"authorityId"  validate:"required"` // 角色ID
+	AuthorityId uint          `json:"authorityId"  binding:"required"` // 角色ID
 }
 
 type SysBaseMenu struct {

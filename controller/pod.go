@@ -3,7 +3,7 @@ package controller
 import (
 	"k8s-platform/middle"
 	"k8s-platform/service"
-	"net/http"
+
 
 	"github.com/gin-gonic/gin"
 	"github.com/wonderivan/logger"
@@ -25,30 +25,25 @@ func (p *pod) GetPods(c *gin.Context) {
 		Page       int    `form:"page"`
 	})
 
-	err := c.Bind(params)
+	err := c.ShouldBind(params)
 	if err != nil {
 		logger.Error("Bind绑定参数失败" + err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg":  "Bind绑定参数失败" + err.Error(),
-			"data": nil,
-		})
+		middle.ResponseError(c, middle.CodeInvalidParam)
 		return
 	}
 
 	data, err := service.Pod.GetPods(params.FilterName, params.Namespace, params.Limit, params.Page)
 	if err != nil {
-
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg":  err.Error(),
-			"data": nil,
-		})
+		logger.Error("获取pod失败" + err.Error())
+		middle.ResponseError(c, middle.CodeServerBusy)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"msg":  "获取pod列表成功",
-		"data": data,
-	})
+	// c.JSON(http.StatusOK, gin.H{
+	// 	"msg":  "获取pod列表成功",
+	// 	"data": data,
+	// })
+	middle.ResponseSuccess(c,data)
 
 }
 
@@ -62,30 +57,26 @@ func (p *pod) GetPodsDetail(c *gin.Context) {
 		Namespace string `form:"namespace"`
 	})
 
-	err := c.Bind(params)
+	err := c.ShouldBind(params)
 	if err != nil {
 		logger.Error("Bind绑定参数失败" + err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg":  "Bind绑定参数失败" + err.Error(),
-			"data": nil,
-		})
+		middle.ResponseError(c, middle.CodeInvalidParam)
 		return
 	}
 
 	data, err := service.Pod.GetDetail(params.PodName, params.Namespace)
 	if err != nil {
 
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg":  err.Error(),
-			"data": nil,
-		})
+		logger.Error("获取pod详情失败" + err.Error())
+		middle.ResponseError(c, middle.CodeServerBusy)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"msg":  "获取pod详情成功",
-		"data": data,
-	})
+	// c.JSON(http.StatusOK, gin.H{
+	// 	"msg":  "获取pod详情成功",
+	// 	"data": data,
+	// })
+	middle.ResponseSuccess(c,data)
 
 }
 
@@ -103,27 +94,23 @@ func (p *pod) DeletePod(c *gin.Context) {
 	err := c.ShouldBindJSON(params)
 	if err != nil {
 		logger.Error("Bind绑定参数失败" + err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg":  "Bind绑定参数失败" + err.Error(),
-			"data": nil,
-		})
+		middle.ResponseError(c, middle.CodeInvalidParam)
 		return
 	}
 
 	err = service.Pod.DeletePod(params.PodName, params.Namespace)
 	if err != nil {
 
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg":  err.Error(),
-			"data": nil,
-		})
+		logger.Error("删除pod失败" + err.Error())
+		middle.ResponseError(c, middle.CodeServerBusy)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"msg":  "删除pod列表成功",
-		"data": nil,
-	})
+	// c.JSON(http.StatusOK, gin.H{
+	// 	"msg":  "删除pod列表成功",
+	// 	"data": nil,
+	// })
+	middle.ResponseSuccess(c,nil)
 
 }
 
@@ -134,17 +121,15 @@ func (p *pod) GetPodNumPerNp(c *gin.Context) {
 	data, err := service.Pod.GetPodNum()
 	if err != nil {
 
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg":  err.Error(),
-			"data": nil,
-		})
+		middle.ResponseError(c, middle.CodeServerBusy)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"msg":  "获取每个namespace中pod数量成功",
-		"data": data,
-	})
+	// c.JSON(http.StatusOK, gin.H{
+	// 	"msg":  "获取每个namespace中pod数量成功",
+	// 	"data": data,
+	// })
+	middle.ResponseSuccess(c,data)
 
 }
 
@@ -162,27 +147,23 @@ func (p *pod) GetPodLog(c *gin.Context) {
 	err := c.Bind(params)
 	if err != nil {
 		logger.Error("Bind绑定参数失败" + err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg":  "Bind绑定参数失败" + err.Error(),
-			"data": nil,
-		})
+		middle.ResponseError(c, middle.CodeInvalidParam)
 		return
 	}
 
 	log, err := service.Pod.GetPodLog(params.ContainerName, params.PodName, params.Namespace)
 	if err != nil {
 
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg":  err.Error(),
-			"data": nil,
-		})
+		logger.Error("获取pod日志失败" + err.Error())
+		middle.ResponseError(c, middle.CodeServerBusy)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"msg":  "获取pod中容器日志成功",
-		"data": log,
-	})
+	// c.JSON(http.StatusOK, gin.H{
+	// 	"msg":  "获取pod中容器日志成功",
+	// 	"data": log,
+	// })
+	middle.ResponseSuccess(c,log)
 
 }
 
@@ -199,27 +180,23 @@ func (p *pod) GetPodContainer(c *gin.Context) {
 	err := c.Bind(params)
 	if err != nil {
 		logger.Error("Bind绑定参数失败" + err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg":  "Bind绑定参数失败" + err.Error(),
-			"data": nil,
-		})
+		middle.ResponseError(c, middle.CodeInvalidParam)
 		return
 	}
 
 	data, err := service.Pod.GetPodContainer(params.PodName, params.Namespace)
 	if err != nil {
 
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg":  err.Error(),
-			"data": nil,
-		})
+		logger.Error("获取pod容器失败" + err.Error())
+		middle.ResponseError(c, middle.CodeServerBusy)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"msg":  "获取pod容器成功",
-		"data": data,
-	})
+	// c.JSON(http.StatusOK, gin.H{
+	// 	"msg":  "获取pod容器成功",
+	// 	"data": data,
+	// })
+	middle.ResponseSuccess(c,data)
 
 }
 
@@ -236,27 +213,23 @@ func (p *pod) UpdatePod(c *gin.Context) {
 	err := c.ShouldBindJSON(params)
 	if err != nil {
 		logger.Error("Bind绑定参数失败" + err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg":  "Bind绑定参数失败" + err.Error(),
-			"data": nil,
-		})
+		middle.ResponseError(c, middle.CodeInvalidParam)
 		return
 	}
 
 	err = service.Pod.UpdatePod(params.Namespace, params.Content)
 	if err != nil {
 
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg":  err.Error(),
-			"data": nil,
-		})
+		logger.Error("更新pod失败" + err.Error())
+		middle.ResponseError(c, middle.CodeServerBusy)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"msg":  "更新pod成功",
-		"data": nil,
-	})
+	// c.JSON(http.StatusOK, gin.H{
+	// 	"msg":  "更新pod成功",
+	// 	"data": nil,
+	// })
+	middle.ResponseSuccess(c,nil)
 
 }
 

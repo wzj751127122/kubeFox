@@ -3,6 +3,7 @@ package logic
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"k8s-platform/dao"
 	"k8s-platform/model"
 	"k8s-platform/utils"
@@ -11,11 +12,12 @@ import (
 )
 
 func Login(ctx *gin.Context, userInfo *model.AdminLoginInput) (string, error) {
+	fmt.Println("finduser",)
 	user, err := dao.Find(ctx, &model.SysUser{UserName: userInfo.UserName})
 	if err != nil {
 		return "", err
 	}
-
+	fmt.Println(user)
 	if !utils.CheckPassword(userInfo.Password, user.Password) {
 		return "", errors.New("密码错误,请重新输入")
 	}

@@ -14,8 +14,13 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 		// 这里的具体实现方式要依据你的实际业务情况决定
 
 		//对登录接口放行
-		if len(c.Request.URL.String()) >= 10 && c.Request.URL.String()[0:10] == "api/login" {
+		// if len(c.Request.URL.String()) >= 10 && c.Request.URL.String()[0:10] == "api/login" {
+		// 	c.Next()
+		// 	return
+		// }
+		if len(c.Request.URL.String()) == 15 && c.Request.URL.String()[0:15] == "/api/user/login" {
 			c.Next()
+			return
 		}
 		// } else {
 		// 	authHeader := c.Request.Header.Get("Authorization")
@@ -53,12 +58,12 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		c.Abort()
-		return
+		// c.Abort()
+		// return
 
 		// 将当前请求的username信息保存到请求的上下文c上
-		
+		// 后续的处理函数可以用过c.Get("username")来获取当前请求的用户信息
 		c.Set("claims", claims)
-		c.Next() // 后续的处理函数可以用过c.Get("username")来获取当前请求的用户信息
+		c.Next() 
 	}
 }

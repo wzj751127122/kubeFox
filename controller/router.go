@@ -1,29 +1,27 @@
 package controller
 
 import (
-	"net/http"
+
 
 	"github.com/gin-gonic/gin"
 )
 
 // 初始化router的对象，用于跨包调用，首字母大写
-var Router router
 
-type router struct{}
 
-func (r *router) InitApiRouter(router *gin.Engine) {
+func KubeApiRouter(router *gin.RouterGroup) {
 
-	router.GET("/testapi", func(ctx *gin.Context) {
-		ctx.JSON(http.StatusOK, gin.H{
-			"msg":  "ok",
-			"data": nil,
-		})
-	})
+	// router.GET("/testapi", func(ctx *gin.Context) {
+	// 	ctx.JSON(http.StatusOK, gin.H{
+	// 		"msg":  "ok",
+	// 		"data": nil,
+	// 	})
+	// })
 	
 
-	router.GET("/api/k8s/pods", Pod.GetPods)
+	// router.GET("/api/k8s/pods", Pod.GetPods)
 
-	v1 := router.Group("/api/k8s")
+	v1 := router.Group("/k8s")
 
 	{
 		v1.POST("/deployment/create", Deployment.CreateDeployment)

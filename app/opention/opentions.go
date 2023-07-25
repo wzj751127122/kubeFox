@@ -21,10 +21,11 @@ const (
 	defaultConfigFile = "./setting.yaml"
 )
 
+var DB *gorm.DB
 type Options struct {
 	GinEngine *gin.Engine
 	// The default values.
-	DB *gorm.DB
+	// DB *gorm.DB
 	// Factory    dao.ShareDaoFactory // 数据库接口
 	ConfigFile string
 }
@@ -69,7 +70,7 @@ func (o *Options) Complete() error {
 }
 
 func (o *Options) InitDB() error {
-	initDbService := source.NewInitDBService(o.DB)
+	initDbService := source.NewInitDBService(DB)
 	return initDbService.InitDB()
 }
 
@@ -113,7 +114,7 @@ func (o *Options) registerDatabase() error {
 		sqlConfig.Port,
 		sqlConfig.Dbname)
 	var err error
-	if o.DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
+	if DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
 		SkipDefaultTransaction:                   false,
 		DisableForeignKeyConstraintWhenMigrating: true,
 		Logger:                                   newLogger,
@@ -121,7 +122,7 @@ func (o *Options) registerDatabase() error {
 		return err
 	}
 	// 设置数据库连接池
-	sqlDB, err := o.DB.DB()
+	sqlDB, err := DB.DB()
 	if err != nil {
 		return err
 	}

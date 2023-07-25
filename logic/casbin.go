@@ -1,15 +1,16 @@
 package logic
 
 import (
-	"k8s-platform/dao"
+	"k8s-platform/app/opention"
+
 	"k8s-platform/model"
 	"strconv"
 	"sync"
-	models "github.com/casbin/casbin/v2/model"
+
 	"github.com/casbin/casbin/v2"
+	models "github.com/casbin/casbin/v2/model"
 	gormadapter "github.com/casbin/gorm-adapter/v3"
 	"github.com/pkg/errors"
-
 )
 
 func UpdateCasbin(AuthorityID uint, casbinInfos []model.CasbinInfo) error {
@@ -32,7 +33,7 @@ func UpdateCasbin(AuthorityID uint, casbinInfos []model.CasbinInfo) error {
 }
 
 func UpdateCasbinApi(oldPath string, newPath string, oldMethod string, newMethod string) error {
-	err := dao.DB.Model(&gormadapter.CasbinRule{}).Where("v1 = ? AND v2 = ?", oldPath, oldMethod).Updates(map[string]interface{}{
+	err := opention.DB.Model(&gormadapter.CasbinRule{}).Where("v1 = ? AND v2 = ?", oldPath, oldMethod).Updates(map[string]interface{}{
 		"v1": newPath,
 		"v2": newMethod,
 	}).Error
@@ -70,7 +71,7 @@ var (
 
 func Casbin() *casbin.CachedEnforcer {
 	once.Do(func() {
-		a, _ := gormadapter.NewAdapterByDB(dao.DB)
+		a, _ := gormadapter.NewAdapterByDB(opention.DB)
 		text := `
 		[request_definition]
 		r = sub, obj, act

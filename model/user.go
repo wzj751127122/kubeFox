@@ -10,8 +10,8 @@ import (
 )
 
 type AdminLoginInput struct {
-	UserName string `form:"username" json:"username" comment:"用户名"  validate:"required" example:"用户名"`
-	Password string `form:"password" json:"password" comment:"密码"   validate:"required" example:"密码"`
+	UserName string `form:"username" json:"username" comment:"用户名"  binding:"required" example:"用户名"`
+	Password string `form:"password" json:"password" comment:"密码"   binding:"required" example:"密码"`
 }
 
 type AdminLoginOut struct {
@@ -19,9 +19,9 @@ type AdminLoginOut struct {
 }
 
 type UserInfoOut struct {
-	User      SysUser         `json:"user"`
+	User      SysUser   `json:"user"`
 	Menus     []SysMenu `json:"menus"`
-	RuleNames []string        `json:"ruleNames"`
+	RuleNames []string  `json:"ruleNames"`
 }
 
 type SetUserAuth struct {
@@ -29,8 +29,8 @@ type SetUserAuth struct {
 }
 
 type ChangeUserPwdInput struct {
-	OldPwd string `json:"old_pwd" form:"old_pwd" comment:"原密码" validate:"required"`
-	NewPwd string `json:"new_pwd" form:"new_pwd" comment:"new_pwd" validate:"required"`
+	OldPwd string `json:"old_pwd" form:"old_pwd" comment:"原密码" binding:"required"`
+	NewPwd string `json:"new_pwd" form:"new_pwd" comment:"new_pwd" binding:"required"`
 }
 
 type SysUser struct {

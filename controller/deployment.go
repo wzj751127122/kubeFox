@@ -1,9 +1,10 @@
 package controller
 
 import (
-	"fmt"
+
+	"k8s-platform/middle"
 	"k8s-platform/service"
-	"net/http"
+
 
 	"github.com/gin-gonic/gin"
 	"github.com/wonderivan/logger"
@@ -19,36 +20,35 @@ func (d *deployment) GetDeployments(c *gin.Context) {
 	//处理传入的变量
 
 	params := new(struct {
-		FilterName string `form:"filtername"`
-		Namespace  string `form:"namespace"`
-		Limit      int    `form:"limit"`
-		Page       int    `form:"page"`
+		// FilterName string `form:"filtername"`
+		// Namespace  string `form:"namespace"`
+		// Limit      int    `form:"limit"`
+		// Page       int    `form:"page"`
+		FilterName string `json:"filter_name" form:"filter_name" binding:"" comment:"过滤名"`
+		NameSpace  string `json:"namespace" form:"namespace" binding:"" comment:"命名空间"`
+		Limit      int    `json:"limit" form:"limit" binding:"" comment:"分页限制"`
+		Page       int    `json:"page" form:"page" binding:"" comment:"页码"`
 	})
 
-	err := c.Bind(params)
+	err := c.ShouldBind(params)
 	if err != nil {
 		logger.Error("Bind绑定参数失败" + err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg":  "Bind绑定参数失败" + err.Error(),
-			"data": nil,
-		})
+		middle.ResponseError(c, middle.CodeInvalidParam)
 		return
 	}
 
-	data, err := service.Deployment.GetDeployment(params.FilterName, params.Namespace, params.Limit, params.Page)
+	data, err := service.Deployment.GetDeployment(params.FilterName, params.NameSpace, params.Limit, params.Page)
 	if err != nil {
 
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg":  err.Error(),
-			"data": nil,
-		})
+		logger.Error("获取deployment失败" + err.Error())
+		middle.ResponseError(c, middle.CodeServerBusy)
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"msg":  "获取deployment列表成功",
-		"data": data,
-	})
+	middle.ResponseSuccess(c,data)
+	// c.JSON(http.StatusOK, gin.H{
+	// 	"msg":  "获取deployment列表成功",
+	// 	"data": data,
+	// })
 
 }
 
@@ -62,30 +62,24 @@ func (d *deployment) GetDeploymentsDetail(c *gin.Context) {
 		Namespace      string `form:"namespace"`
 	})
 
-	err := c.Bind(params)
+	err := c.ShouldBind(params)
 	if err != nil {
-		logger.Error("Bind绑定参数失败" + err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg":  "Bind绑定参数失败" + err.Error(),
-			"data": nil,
-		})
+
+		logger.Error("bind失败" + err.Error())
+		middle.ResponseError(c, middle.CodeServerBusy)
 		return
 	}
 
 	data, err := service.Deployment.GetDeploymentDetail(params.DeploymentName, params.Namespace)
 	if err != nil {
 
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg":  err.Error(),
-			"data": nil,
-		})
+
+		logger.Error("获取deployment详情失败" + err.Error())
+		middle.ResponseError(c, middle.CodeServerBusy)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"msg":  "获取deployment详情成功",
-		"data": data,
-	})
+middle.ResponseSuccess(c,data)
 
 }
 
@@ -99,28 +93,22 @@ func (d *deployment) CreateDeployment(c *gin.Context) {
 
 	err = c.ShouldBindJSON(deployCreate)
 	if err != nil {
-		logger.Error("Bind绑定参数失败" + err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg":  "Bind绑定参数失败" + err.Error(),
-			"data": nil,
-		})
+
+		logger.Error("bind失败" + err.Error())
+		middle.ResponseError(c, middle.CodeInvalidParam)
 		return
 	}
 
 	err = service.Deployment.CreateDeployment(deployCreate)
 	if err != nil {
 
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg":  err.Error(),
-			"data": nil,
-		})
+
+		logger.Error("创建deployment失败" + err.Error())
+		middle.ResponseError(c, middle.CodeServerBusy)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"msg":  "创建deployment成功",
-		"data": nil,
-	})
+middle.ResponseSuccess(c,nil)
 
 }
 
@@ -136,11 +124,9 @@ func (d *deployment) ScaleDeployment(c *gin.Context) {
 
 	err := c.ShouldBindJSON(params)
 	if err != nil {
-		logger.Error("Bind绑定参数失败" + err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg":  "Bind绑定参数失败" + err.Error(),
-			"data": nil,
-		})
+
+		logger.Error("bind失败" + err.Error())
+		middle.ResponseError(c, middle.CodeServerBusy)
 		return
 	}
 
@@ -148,17 +134,17 @@ func (d *deployment) ScaleDeployment(c *gin.Context) {
 
 	if err != nil {
 
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg":  err.Error(),
-			"data": nil,
-		})
+
+		logger.Error("扩容deployment失败" + err.Error())
+		middle.ResponseError(c, middle.CodeServerBusy)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"msg":  "设置deployment副本数成功",
-		"data": fmt.Sprintf("最新副本数为 %d", data),
-	})
+	// c.JSON(http.StatusOK, gin.H{
+	// 	"msg":  "设置deployment副本数成功",
+	// 	"data": fmt.Sprintf("最新副本数为 %d", data),
+	// })
+	middle.ResponseSuccess(c,data)
 
 }
 
@@ -175,29 +161,27 @@ func (d *deployment) DeleteDeployment(c *gin.Context) {
 
 	err := c.ShouldBindJSON(params)
 	if err != nil {
-		logger.Error("Bind绑定参数失败" + err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg":  "Bind绑定参数失败" + err.Error(),
-			"data": nil,
-		})
+
+		logger.Error("bind失败" + err.Error())
+		middle.ResponseError(c, middle.CodeInvalidParam)
 		return
 	}
 
 	err = service.Deployment.DeleteDeployment(params.DeploymentName, params.Namespace)
 	if err != nil {
 
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg":  err.Error(),
-			"data": nil,
-		})
+
+		logger.Error("删除deployment失败" + err.Error())
+		middle.ResponseError(c, middle.CodeServerBusy)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"msg":  "删除deployment列表成功",
-		"data": nil,
-	})
+	// c.JSON(http.StatusOK, gin.H{
+	// 	"msg":  "删除deployment列表成功",
+	// 	"data": nil,
+	// })
 
+	middle.ResponseSuccess(c,nil)
 }
 
 // 重启deployment
@@ -210,34 +194,31 @@ func (d *deployment) RestartDeployment(c *gin.Context) {
 
 	err := c.ShouldBindJSON(params)
 	if err != nil {
-		logger.Error("Bind绑定参数失败" + err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg":  "Bind绑定参数失败" + err.Error(),
-			"data": nil,
-		})
+
+		logger.Error("bind失败" + err.Error())
+		middle.ResponseError(c, middle.CodeServerBusy)
 		return
 	}
 
 	err = service.Deployment.RestartDeployment(params.DeploymentName, params.Namespace)
 	if err != nil {
 
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg":  err.Error(),
-			"data": nil,
-		})
+
+		logger.Error("重启deployment失败" + err.Error())
+		middle.ResponseError(c, middle.CodeServerBusy)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"msg":  "重启deployment成功",
-		"data": nil,
-	})
+	// c.JSON(http.StatusOK, gin.H{
+	// 	"msg":  "重启deployment成功",
+	// 	"data": nil,
+	// })
+middle.ResponseSuccess(c,nil)
 }
 
-
-//更新deployment
-func (d *deployment)UpdateDeployment(c *gin.Context)  {
-	params := new(struct{
+// 更新deployment
+func (d *deployment) UpdateDeployment(c *gin.Context) {
+	params := new(struct {
 		content   string `json:"content"`
 		namespace string `json:"namespace"`
 	})
@@ -245,40 +226,36 @@ func (d *deployment)UpdateDeployment(c *gin.Context)  {
 	err := c.ShouldBindJSON(params)
 	if err != nil {
 		logger.Error("Bind绑定参数失败" + err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg":  "Bind绑定参数失败" + err.Error(),
-			"data": nil,
-		})
+		middle.ResponseError(c, middle.CodeServerBusy)
 		return
 	}
 
-	err = service.Deployment.UpdateDeployment(params.content,params.namespace)
+	err = service.Deployment.UpdateDeployment(params.content, params.namespace)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg":  err.Error(),
-			"data": nil,
-		})
+
+		logger.Error("更新deployment失败" + err.Error())
+		middle.ResponseError(c, middle.CodeServerBusy)
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"msg":  "更新deployment成功",
-		"data": nil,
-	})
+	// c.JSON(http.StatusOK, gin.H{
+	// 	"msg":  "更新deployment成功",
+	// 	"data": nil,
+	// })
+	middle.ResponseSuccess(c,nil)
 }
-
 
 func (d *deployment) GetDeploymentNumPreNS(c *gin.Context) {
 	data, err := service.Deployment.GetDeploymentNumNp()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"msg":  err.Error(),
-			"data": nil,
-		})
+
+		logger.Error("获取deployment数量失败" + err.Error())
+		middle.ResponseError(c, middle.CodeServerBusy)
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"msg":  "更新deployment成功",
-		"data": data,
-	})
+	// c.JSON(http.StatusOK, gin.H{
+	// 	"msg":  "更新deployment成功",
+	// 	"data": data,
+	// })
+	middle.ResponseSuccess(c,data)
 
 }

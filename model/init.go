@@ -29,6 +29,11 @@ var (
 	UserSubDefaultAuth    uint = 2221
 	UserSubDefaultAuthStr      = strconv.Itoa(int(UserSubDefaultAuth))
 )
+const (
+	LoginURL    = "/api/user/login"
+	LogoutURL   = "/api/user/logout"
+	WebShellURL = "/api/k8s/pod/webshell"
+)
 
 // SysUserEntities 用户初始化数据
 var (

@@ -2,6 +2,7 @@ package dao
 
 import (
 	"errors"
+	"k8s-platform/app/opention"
 	"k8s-platform/model"
 
 	"github.com/wonderivan/logger"
@@ -27,7 +28,7 @@ func (w *workflow) GetWorkflow(filterName, namespace string, limit, page int) (d
 	//定义数据库查询返回内容
 	var workflowList []*model.Workflow
 
-	tx := DB.Where("name like ?", "%"+filterName+"%").Limit(limit).Offset(startSet).Order("id desc").Find(&workflowList)
+	tx := opention.DB.Where("name like ?", "%"+filterName+"%").Limit(limit).Offset(startSet).Order("id desc").Find(&workflowList)
 
 	if tx.Error != nil && tx.Error.Error() != "record not found" {
 
@@ -47,7 +48,7 @@ func (w *workflow) GetWorkflowById(id int) (workflow *model.Workflow, err error)
 
 	workflow = &model.Workflow{}
 
-	tx := DB.Where("id = ?", id).First(&workflow)
+	tx := opention.DB.Where("id = ?", id).First(&workflow)
 	if tx.Error != nil && tx.Error.Error() != "record not found" {
 
 		logger.Error("获取单条workflow失败" + tx.Error.Error())
@@ -62,7 +63,7 @@ func (w *workflow) GetWorkflowById(id int) (workflow *model.Workflow, err error)
 
 func (w *workflow) CreateWorkflow(workflow *model.Workflow) (err error) {
 
-	tx := DB.Create(&workflow)
+	tx := opention.DB.Create(&workflow)
 	if tx.Error != nil && tx.Error.Error() != "record not found" {
 
 		logger.Error("创建workflow失败" + tx.Error.Error())
@@ -77,7 +78,7 @@ func (w *workflow) CreateWorkflow(workflow *model.Workflow) (err error) {
 
 func (w *workflow) DelWorkflow(id int) (err error) {
 
-	tx := DB.Where("id = ?", id).Delete(&model.Workflow{})
+	tx := opention.DB.Where("id = ?", id).Delete(&model.Workflow{})
 	if tx.Error != nil {
 
 		logger.Error("删除workflow失败" + tx.Error.Error())

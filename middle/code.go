@@ -3,7 +3,7 @@ package middle
 type ResCode int64
 
 const (
-	CodeSuccess ResCode = 1000 + iota
+	CodeSuccess ResCode = 200 + iota
 	CodeInvalidParam
 	CodeUserExist
 	CodeUserNotExist

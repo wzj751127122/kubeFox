@@ -7,7 +7,7 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 	uuid "github.com/satori/go.uuid"
 
-	"github.com/wonderivan/logger"
+
 )
 
 var JwtToken jwttoken
@@ -83,38 +83,63 @@ func (j *jwttoken) GenerateToken(baseClaims BaseClaims) (string, error) {
 	return token, err
 }
 
-// ParseToken 解析JWT
-func (j *jwttoken) ParseToken(tokenString string) (claims *CustomClaims, err error) {
-	// 解析token
-	// 如果是自定义Claim结构体则需要使用 ParseWithClaims 方法
+// // ParseToken 解析JWT
+// func (j *jwttoken) ParseToken(tokenString string) (claims *CustomClaims, err error) {
+// 	// 解析token
+// 	// 如果是自定义Claim结构体则需要使用 ParseWithClaims 方法
 
-	var mc = new(CustomClaims)
-	token, err := jwt.ParseWithClaims(tokenString, mc, func(token *jwt.Token) (i interface{}, err error) {
-		// 直接使用标准的Claim则可以直接使用Parse方法
-		//token, err := jwt.Parse(tokenString, func(token *jwt.Token) (i interface{}, err error) {
-		// return CustomSecret, nil
+// 	var mc = new(CustomClaims)
+// 	token, err := jwt.ParseWithClaims(tokenString, mc, func(token *jwt.Token) (i interface{}, err error) {
+// 		// 直接使用标准的Claim则可以直接使用Parse方法
+// 		//token, err := jwt.Parse(tokenString, func(token *jwt.Token) (i interface{}, err error) {
+// 		// return CustomSecret, nil
+// 		return []byte(j.secret), nil
+// 	})
+// 	if err != nil {
+
+// 		logger.Error("parse token failed", err)
+// 		if ve, ok := err.(*jwt.ValidationError); ok {
+// 			if ve.Errors&jwt.ValidationErrorMalformed != 0 {
+// 				return nil, errors.New("TokenMalformed")
+// 			} else if ve.Errors&jwt.ValidationErrorExpired != 0 {
+// 				return nil, errors.New("TokenExpired")
+// 			} else if ve.Errors&jwt.ValidationErrorNotValidYet != 0 {
+// 				return nil, errors.New("TokenNotValidYet")
+// 			} else {
+// 				return nil, errors.New("TokenInvalid")
+// 			}
+
+// 		}
+// 		// return nil, err
+// 	}
+// 	// 对token对象中的Claim进行类型断言
+// 	if claims, ok := token.Claims.(*CustomClaims); ok && token.Valid { // 校验token
+// 		return claims, nil
+// 	}
+// 	return nil, errors.New("invalid token")
+// }
+
+
+// ParseToken 解析token函数
+func (j *jwttoken) ParseToken(tokenString string) (claims *CustomClaims, err error) {
+	// 使用jwt.ParseWithClaims方法解析token，这个token是前端传给我们的,获得一个*Token类型的对象
+	token, err := jwt.ParseWithClaims(tokenString, &CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(j.secret), nil
 	})
 	if err != nil {
-
-		logger.Error("parse token failed", err)
+		// 处理token解析后的各种错误
 		if ve, ok := err.(*jwt.ValidationError); ok {
-			if ve.Errors&jwt.ValidationErrorMalformed != 0 {
-				return nil, errors.New("TokenMalformed")
-			} else if ve.Errors&jwt.ValidationErrorExpired != 0 {
-				return nil, errors.New("TokenExpired")
-			} else if ve.Errors&jwt.ValidationErrorNotValidYet != 0 {
-				return nil, errors.New("TokenNotValidYet")
+			if ve.Errors == jwt.ValidationErrorExpired {
+				return nil, errors.New("登录已过期，请重新登录")
 			} else {
-				return nil, errors.New("TokenInvalid")
+				return nil, errors.New("token不可用," + err.Error())
 			}
-
 		}
-		// return nil, err
 	}
-	// 对token对象中的Claim进行类型断言
-	if claims, ok := token.Claims.(*CustomClaims); ok && token.Valid { // 校验token
+	// 转换为*CustomClaims类型并返回
+	if claims, ok := token.Claims.(*CustomClaims); ok && token.Valid {
+		// 如果解析成功并且token是可用的
 		return claims, nil
 	}
-	return nil, errors.New("invalid token")
+	return nil, errors.New("解析token失败")
 }

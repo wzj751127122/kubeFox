@@ -12,6 +12,12 @@ func init() {
 	RegisterInitializer(SysAuthorityOrder, &SysAuthority{})
 }
 
+type AuthorityList struct {
+	PageInfo
+	Total             int64                `json:"total"`
+	AuthorityListItem []SysAuthority `json:"list"`
+}
+
 type SysAuthority struct {
 	CreatedAt       time.Time       `json:"created_at" gorm:"column:created_at"`
 	UpdatedAt       time.Time       `json:"updated_at" gorm:"column:updated_at"`

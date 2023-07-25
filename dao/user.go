@@ -2,14 +2,16 @@ package dao
 
 import (
 	"context"
+
+	"k8s-platform/app/opention"
 	"k8s-platform/model"
 
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
 )
-var (
-	DB  *gorm.DB
-)
+// var (
+// 	DB  *gorm.DB
+// )
 
 // type User interface {
 // 	Find(ctx context.Context, userInfo *model.SysUser) (*model.SysUser, error)
@@ -22,10 +24,14 @@ var (
 // var User user
 // type user struct {
 // }
+// type user struct {
+// 	db *gorm.DB
+// }
+
 
 func Find(ctx context.Context, userInfo *model.SysUser) (*model.SysUser, error) {
 	user := &model.SysUser{}
-	if err := DB.WithContext(ctx).Preload("Authorities").Preload("Authority").Where(userInfo).Find(user).Error; err != nil {
+	if err := opention.DB.WithContext(ctx).Preload("Authorities").Preload("Authority").Where(userInfo).Find(user).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, gorm.ErrRecordNotFound
 		}
@@ -35,16 +41,16 @@ func Find(ctx context.Context, userInfo *model.SysUser) (*model.SysUser, error) 
 }
 
 func Save(ctx context.Context, userInfo *model.SysUser) error {
-	return DB.WithContext(ctx).Save(userInfo).Error
+	return opention.DB.WithContext(ctx).Save(userInfo).Error
 }
 
 func Updates(ctx context.Context, userInfo *model.SysUser) error {
 	if userInfo.ID == 0 {
 		return errors.New("id not set")
 	}
-	return DB.WithContext(ctx).Updates(userInfo).Error
+	return opention.DB.WithContext(ctx).Updates(userInfo).Error
 }
 
 func Delete(ctx context.Context, userInfo *model.SysUser) error {
-	return DB.WithContext(ctx).Delete(userInfo).Error
+	return opention.DB.WithContext(ctx).Delete(userInfo).Error
 }
