@@ -26,6 +26,7 @@ func (a *authorityController) GetAuthorityList(ctx *gin.Context) {
 		return
 	}
 	middle.ResponseSuccess(ctx, data)
+
 }
 
 
@@ -35,8 +36,8 @@ func (a *authorityController) GetAuthorityList(ctx *gin.Context) {
 // @Security  ApiKeyAuth
 // @accept    application/json
 // @Produce   application/json
-// @Param     data  body      dto.CasbinInReceive                                          true  "权限id, 权限模型列表"
-// @Success   200   {object}  middleware.Response{data=dto.CasbinInfo,msg=string}  "获取权限列表,返回包括casbin详情列表"
+// @Param     data  body      model.CasbinInReceive                                          true  "权限id, 权限模型列表"
+// @Success   200   {object}  middle.ResponseData{msg=string}  "获取权限列表,返回包括casbin详情列表"
 // @Router    /api/authority/getPolicyPathByAuthorityId [get]
 func (a *authorityController) GetPolicyPathByAuthorityId(ctx *gin.Context) {
 	rule := &model.CasbinInReceive{}
@@ -54,8 +55,8 @@ func (a *authorityController) GetPolicyPathByAuthorityId(ctx *gin.Context) {
 // @Security  ApiKeyAuth
 // @accept    application/json
 // @Produce   application/json
-// @Param     data  body      dto.UpdateCasbinInput                                          true  "权限id, 权限模型列表"
-// @Success   200   {object}  middleware.Response{msg=string}  "通过角色更新接口权限"
+// @Param     data  body      model.UpdateCasbinInput                                          true  "权限id, 权限模型列表"
+// @Success   200   {object}  middle.ResponseData{msg=string}  "通过角色更新接口权限"
 // @Router    /api/authority/updateCasbinByAuthority [post]
 func (a *authorityController) UpdateCasbinByAuthorityId(ctx *gin.Context) {
 	params := &model.UpdateCasbinInput{}

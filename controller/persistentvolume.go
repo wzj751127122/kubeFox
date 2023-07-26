@@ -21,7 +21,7 @@ type persistentVolume struct{}
 // @Accept       json
 // @Produce      json
 // @Param        name  query  string  true  "persistentvolume名称"
-// @Success       200  {object}  middleware.Response"{"code": 200, msg="","data": "删除成功}"
+// @Success       200  {object}  middle.ResponseData"{"code": 200, msg="","data": "删除成功}"
 // @Router       /api/k8s/spersistentvolume/del [delete]
 func (n *persistentVolume) DeletePersistentVolume(ctx *gin.Context) {
 	params := new(struct {
@@ -51,7 +51,7 @@ func (n *persistentVolume) DeletePersistentVolume(ctx *gin.Context) {
 // @Param        filter_name  query  string  false  "过滤"
 // @Param        page         query  int     false  "页码"
 // @Param        limit        query  int     false  "分页限制"
-// @Success       200  {object}  middleware.Response"{"code": 200, msg="","data": service.PersistentVolumeResp}"
+// @Success       200  {object}  middle.ResponseData"{"code": 200, msg="","data": service.PersistentVolumeResp}"
 // @Router       /api/k8s/persistentvolume/list [get]
 func (n *persistentVolume) GetPersistentVolumeList(ctx *gin.Context) {
 	params := new(struct {
@@ -82,7 +82,7 @@ func (n *persistentVolume) GetPersistentVolumeList(ctx *gin.Context) {
 // @Accept       json
 // @Produce      json
 // @Param        name  query  string  true  "persistentVolume名称"
-// @Success       200  {object}  middleware.Response"{"code": 200, msg="","data": *coreV1.PersistentVolume}"
+// @Success       200  {object}  middle.ResponseData"{"code": 200, msg="","data": *coreV1.PersistentVolume}"
 // @Router       /api/k8s/persistentvolume/detail [get]
 func (n *persistentVolume) GetPersistentVolumeDetail(ctx *gin.Context) {
 	params := new(struct {

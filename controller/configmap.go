@@ -23,7 +23,7 @@ type configmap struct{}
 // @Produce      json
 // @Param        name       query  string  true  "Configmap名称"
 // @Param        namespace    query  string  true  "命名空间"
-// @Success       200  {object}  middleware.Response"{"code": 200, msg="","data": "删除成功}"
+// @Success       200  {object}  middle.ResponseData"{"code": 200, msg="","data": "删除成功}"
 // @Router       /api/k8s/configmap/del [delete]
 func (s *configmap) DeleteConfigmap(ctx *gin.Context) {
 	params := new(struct {
@@ -54,7 +54,7 @@ func (s *configmap) DeleteConfigmap(ctx *gin.Context) {
 // @Param        name       query  string  true  "无状态控制器名称"
 // @Param        namespace  query  string  true  "命名空间"
 // @Param        content    query  string  true  "更新内容"
-// @Success       200  {object}  middleware.Response"{"code": 200, msg="","data": "更新成功}"
+// @Success       200  {object}  middle.ResponseData"{"code": 200, msg="","data": "更新成功}"
 // @Router       /api/k8s/configmap/update [put]
 func (s *configmap) UpdateConfigmap(ctx *gin.Context) {
 	params := new(struct {
@@ -86,7 +86,7 @@ func (s *configmap) UpdateConfigmap(ctx *gin.Context) {
 // @Param        namespace  query  string  false  "命名空间"
 // @Param        page         query  int     false  "页码"
 // @Param        limit        query  int     false  "分页限制"
-// @Success       200  {object}  middleware.Response"{"code": 200, msg="","data": }"
+// @Success       200  {object}  middle.ResponseData"{"code": 200, msg="","data": }"
 // @Router       /api/k8s/configmap/list [get]
 func (s *configmap) GetConfigmapList(ctx *gin.Context) {
 	params := new(struct {
@@ -119,7 +119,7 @@ func (s *configmap) GetConfigmapList(ctx *gin.Context) {
 // @Produce      json
 // @Param        name       query  string  true  "Configmap名称"
 // @Param        namespace  query  string  true  "命名空间"
-// @Success      200        {object}  middleware.Response"{"code": 200, msg="","data":v1.Deployment }"
+// @Success      200        {object}  middle.ResponseData"{"code": 200, msg="","data":v1.Deployment }"
 // @Router       /api/k8s/configmap/detail [get]
 func (s *configmap) GetConfigmapDetail(ctx *gin.Context) {
 	params := new(struct {

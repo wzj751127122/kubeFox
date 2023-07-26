@@ -21,7 +21,7 @@ type namespace struct{}
 // @Accept       json
 // @Produce      json
 // @Param        name  query  string  true  "namespace名称"
-// @Success       200  {object}  middleware.Response"{"code": 200, msg="","data": "创建成功}"
+// @Success       200  {object}  middle.ResponseData"{"code": 200, msg="","data": "创建成功}"
 // @Router       /api/k8s/namespace/create [put]
 func (n *namespace) CreateNameSpace(ctx *gin.Context) {
 	params := new(struct {
@@ -50,7 +50,7 @@ func (n *namespace) CreateNameSpace(ctx *gin.Context) {
 // @Accept       json
 // @Produce      json
 // @Param        name  query  string  true  "namespace名称"
-// @Success       200  {object}  middleware.Response"{"code": 200, msg="","data": "删除成功}"
+// @Success       200  {object}  middle.ResponseData"{"code": 200, msg="","data": "删除成功}"
 // @Router       /api/k8s/namespace/del [delete]
 func (n *namespace) DeleteNameSpace(ctx *gin.Context) {
 	params := new(struct {
@@ -80,7 +80,7 @@ func (n *namespace) DeleteNameSpace(ctx *gin.Context) {
 // @Param        filter_name  query  string  false  "过滤"
 // @Param        page         query  int     false  "页码"
 // @Param        limit        query  int     false  "分页限制"
-// @Success       200  {object}  middleware.Response"{"code": 200, msg="","data": service.NameSpaceResp}"
+// @Success       200  {object}  middle.ResponseData"{"code": 200, msg="","data": service.NameSpaceResp}"
 // @Router       /api/k8s/namespace/list [get]
 func (n *namespace) GetNameSpaceList(ctx *gin.Context) {
 	params := new(struct {
@@ -111,7 +111,7 @@ func (n *namespace) GetNameSpaceList(ctx *gin.Context) {
 // @Accept       json
 // @Produce      json
 // @Param        name  query  string  true  "namespace名称"
-// @Success      200        {object}  middleware.Response"{"code": 200, msg="","data":data }"
+// @Success      200        {object}  middle.ResponseData"{"code": 200, msg="","data":data }"
 // @Router       /api/k8s/namespace/detail [get]
 func (n *namespace) GetNameSpaceDetail(ctx *gin.Context) {
 	params := new(struct {

@@ -20,8 +20,8 @@ type serviceController struct{}
 // @ID           /api/k8s/service/create
 // @Accept       json
 // @Produce      json
-// @Param        body  body  kubernetes.ServiceCreateInput  true  "body"
-// @Success       200  {object}  middle.Response"{"code": 200, msg="","data": "创建成功}"
+// @Param        body  body  service.ServiceCreate  true  "body"
+// @Success       200  {object}  middle.ResponseData"{"code": 200, msg="","data": "创建成功}"
 // @Router       /api/k8s/service/create [post]
 func (s *serviceController) CreateService(ctx *gin.Context) {
 	params := new(service.ServiceCreate)
@@ -48,7 +48,7 @@ func (s *serviceController) CreateService(ctx *gin.Context) {
 // @Produce      json
 // @Param        name       query  string  true  "service名称"
 // @Param        namespace    query  string  true  "命名空间"
-// @Success       200  {object}  middle.Response"{"code": 200, msg="","data": "删除成功}"
+// @Success       200  {object}  middle.ResponseData"{"code": 200, msg="","data": "删除成功}"
 // @Router       /api/k8s/service/del [delete]
 func (s *serviceController) DeleteService(ctx *gin.Context) {
 	params := new(struct {
@@ -79,7 +79,7 @@ func (s *serviceController) DeleteService(ctx *gin.Context) {
 // @Param        name       query  string  true  "service名称"
 // @Param        namespace  query  string  true  "命名空间"
 // @Param        content    query  string  true  "更新内容"
-// @Success       200  {object}  middle.Response"{"code": 200, msg="","data": "更新成功}"
+// @Success       200  {object}  middle.ResponseData"{"code": 200, msg="","data": "更新成功}"
 // @Router       /api/k8s/service/update [put]
 func (s *serviceController) UpdateService(ctx *gin.Context) {
 	params := new(struct {
@@ -111,7 +111,7 @@ func (s *serviceController) UpdateService(ctx *gin.Context) {
 // @Param        namespace  query  string  false  "命名空间"
 // @Param        page         query  int     false  "页码"
 // @Param        limit        query  int     false  "分页限制"
-// @Success       200  {object}  middle.Response"{"code": 200, msg="","data": }"
+// @Success       200  {object}  middle.ResponseData"{"code": 200, msg="","data": }"
 // @Router       /api/k8s/service/list [get]
 func (s *serviceController) GetServiceList(ctx *gin.Context) {
 	params := new(struct {
@@ -144,7 +144,7 @@ func (s *serviceController) GetServiceList(ctx *gin.Context) {
 // @Produce      json
 // @Param        name       query  string  true  "service名称"
 // @Param        namespace  query  string  true  "命名空间"
-// @Success      200        {object}  middle.Response"{"code": 200, msg="","data":v1.Deployment }"
+// @Success      200        {object}  middle.ResponseData"{"code": 200, msg="","data":v1.Deployment }"
 // @Router       /api/k8s/service/detail [get]
 func (s *serviceController) GetServiceDetail(ctx *gin.Context) {
 	params := new(struct {
@@ -173,7 +173,7 @@ func (s *serviceController) GetServiceDetail(ctx *gin.Context) {
 // @ID           /api/k8s/service/numnp
 // @Accept       json
 // @Produce      json
-// @Success       200  {object}  middle.Response"{"code": 200, msg="","data":service.serviceNp }"
+// @Success       200  {object}  middle.ResponseData"{"code": 200, msg="","data":service.serviceNp }"
 // @Router       /api/k8s/service/numnp [get]
 func (s *serviceController) GetServicePerNS(ctx *gin.Context) {
 	data, err := service.Service.GetServiceNp()

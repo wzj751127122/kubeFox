@@ -1,10 +1,8 @@
 package controller
 
 import (
-
 	"k8s-platform/middle"
 	"k8s-platform/service"
-
 
 	"github.com/gin-gonic/gin"
 	"github.com/wonderivan/logger"
@@ -44,7 +42,7 @@ func (d *deployment) GetDeployments(c *gin.Context) {
 		middle.ResponseError(c, middle.CodeServerBusy)
 		return
 	}
-	middle.ResponseSuccess(c,data)
+	middle.ResponseSuccess(c, data)
 	// c.JSON(http.StatusOK, gin.H{
 	// 	"msg":  "获取deployment列表成功",
 	// 	"data": data,
@@ -73,13 +71,12 @@ func (d *deployment) GetDeploymentsDetail(c *gin.Context) {
 	data, err := service.Deployment.GetDeploymentDetail(params.DeploymentName, params.Namespace)
 	if err != nil {
 
-
 		logger.Error("获取deployment详情失败" + err.Error())
 		middle.ResponseError(c, middle.CodeServerBusy)
 		return
 	}
 
-middle.ResponseSuccess(c,data)
+	middle.ResponseSuccess(c, data)
 
 }
 
@@ -102,13 +99,12 @@ func (d *deployment) CreateDeployment(c *gin.Context) {
 	err = service.Deployment.CreateDeployment(deployCreate)
 	if err != nil {
 
-
 		logger.Error("创建deployment失败" + err.Error())
 		middle.ResponseError(c, middle.CodeServerBusy)
 		return
 	}
 
-middle.ResponseSuccess(c,nil)
+	middle.ResponseSuccess(c, nil)
 
 }
 
@@ -134,7 +130,6 @@ func (d *deployment) ScaleDeployment(c *gin.Context) {
 
 	if err != nil {
 
-
 		logger.Error("扩容deployment失败" + err.Error())
 		middle.ResponseError(c, middle.CodeServerBusy)
 		return
@@ -144,7 +139,7 @@ func (d *deployment) ScaleDeployment(c *gin.Context) {
 	// 	"msg":  "设置deployment副本数成功",
 	// 	"data": fmt.Sprintf("最新副本数为 %d", data),
 	// })
-	middle.ResponseSuccess(c,data)
+	middle.ResponseSuccess(c, data)
 
 }
 
@@ -170,7 +165,6 @@ func (d *deployment) DeleteDeployment(c *gin.Context) {
 	err = service.Deployment.DeleteDeployment(params.DeploymentName, params.Namespace)
 	if err != nil {
 
-
 		logger.Error("删除deployment失败" + err.Error())
 		middle.ResponseError(c, middle.CodeServerBusy)
 		return
@@ -181,18 +175,18 @@ func (d *deployment) DeleteDeployment(c *gin.Context) {
 	// 	"data": nil,
 	// })
 
-	middle.ResponseSuccess(c,nil)
+	middle.ResponseSuccess(c, nil)
 }
 
 // 重启deployment
 func (d *deployment) RestartDeployment(c *gin.Context) {
 
 	params := new(struct {
-		DeploymentName string `json:"deployment_name"`
-		Namespace      string `json:"namespace"`
+		Name      string `json:"deployment_name" form:"deployment_name" comment:"无状态控制器名称" binding:"required"`
+		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" binding:"required"`
 	})
 
-	err := c.ShouldBindJSON(params)
+	err := c.ShouldBind(params)
 	if err != nil {
 
 		logger.Error("bind失败" + err.Error())
@@ -200,9 +194,8 @@ func (d *deployment) RestartDeployment(c *gin.Context) {
 		return
 	}
 
-	err = service.Deployment.RestartDeployment(params.DeploymentName, params.Namespace)
+	err = service.Deployment.RestartDeployment(params.Name,params.NameSpace)
 	if err != nil {
-
 
 		logger.Error("重启deployment失败" + err.Error())
 		middle.ResponseError(c, middle.CodeServerBusy)
@@ -213,7 +206,7 @@ func (d *deployment) RestartDeployment(c *gin.Context) {
 	// 	"msg":  "重启deployment成功",
 	// 	"data": nil,
 	// })
-middle.ResponseSuccess(c,nil)
+	middle.ResponseSuccess(c, nil)
 }
 
 // 更新deployment
@@ -241,7 +234,7 @@ func (d *deployment) UpdateDeployment(c *gin.Context) {
 	// 	"msg":  "更新deployment成功",
 	// 	"data": nil,
 	// })
-	middle.ResponseSuccess(c,nil)
+	middle.ResponseSuccess(c, nil)
 }
 
 func (d *deployment) GetDeploymentNumPreNS(c *gin.Context) {
@@ -256,6 +249,6 @@ func (d *deployment) GetDeploymentNumPreNS(c *gin.Context) {
 	// 	"msg":  "更新deployment成功",
 	// 	"data": data,
 	// })
-	middle.ResponseSuccess(c,data)
+	middle.ResponseSuccess(c, data)
 
 }

@@ -58,7 +58,7 @@ func NewSwaggarRoute(ginEngine *gin.RouterGroup) {
 	docs.SwaggerInfo.Title = "KubeFox API"
 	docs.SwaggerInfo.Description = "KubeFox"
 	docs.SwaggerInfo.Version = "1.0"
-	docs.SwaggerInfo.Host = "127.0.0.1:9999"
+	// docs.SwaggerInfo.Host = "127.0.0.1:9999"
 	docs.SwaggerInfo.BasePath = ""
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 	ginEngine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

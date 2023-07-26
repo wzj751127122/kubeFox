@@ -20,8 +20,8 @@ type workflow struct{}
 // @ID           /api/k8s/workflow/create
 // @Accept       json
 // @Produce      json
-// @Param        body  body  kubernetes.WorkFlowCreateInput  true  "body"
-// @Success       200  {object}  middleware.Response"{"code": 200, msg="","data": "创建成功}"
+// @Param        body  body  service.WorkflowCreate  true  "body"
+// @Success       200  {object}  middle.ResponseData"{"code": 200, msg="","data": "创建成功}"
 // @Router       /api/k8s/workflow/create [post]
 func (w *workflow) CreateWorkFlow(ctx *gin.Context) {
 	params := new(service.WorkflowCreate)
@@ -48,7 +48,7 @@ func (w *workflow) CreateWorkFlow(ctx *gin.Context) {
 // @Accept       json
 // @Produce      json
 // @Param        ID       query  int  true  "Workflow ID"
-// @Success       200  {object}  middleware.Response"{"code": 200, msg="","data": "删除成功}"
+// @Success       200  {object}  middle.ResponseData"{"code": 200, msg="","data": "删除成功}"
 // @Router       /api/k8s/workflow/del [delete]
 func (w *workflow) DeleteWorkflow(ctx *gin.Context) {
 	params := new(struct {
@@ -78,7 +78,7 @@ func (w *workflow) DeleteWorkflow(ctx *gin.Context) {
 // @Param        filter_name  query  string  false  "过滤"
 // @Param        page         query  int     false  "页码"
 // @Param        limit        query  int     false  "分页限制"
-// @Success       200  {object}  middleware.Response"{"code": 200, msg="","data": }"
+// @Success       200  {object}  middle.ResponseData"{"code": 200, msg="","data": }"
 // @Router       /api/k8s/workflow/list [get]
 func (w *workflow) GetWorkflowList(ctx *gin.Context) {
 	params := new(struct {
@@ -110,7 +110,7 @@ func (w *workflow) GetWorkflowList(ctx *gin.Context) {
 // @Accept       json
 // @Produce      json
 // @Param        ID       query  int  true  "Workflow ID"
-// @Success       200  {object}  middleware.Response"{"code": 200, msg="","data": }"
+// @Success       200  {object}  middle.ResponseData"{"code": 200, msg="","data": }"
 // @Router       /api/k8s/workflow/id [get]
 func (w *workflow) GetWorkflowByID(ctx *gin.Context) {
 	params := new(struct {

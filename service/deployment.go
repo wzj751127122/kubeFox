@@ -245,12 +245,13 @@ func (d *deployment) UpdateDeployment(content, namespace string) (err error) {
 // 重启deployment
 func (d *deployment) RestartDeployment(deploymentName, namespace string) (err error) {
 
-	deploymentsClient := K8s.clientSet.AppsV1().Deployments(namespace)
+	// deploymentsClient := K8s.clientSet.AppsV1().Deployments(namespace)
 
 	data := fmt.Sprintf(`{"spec": {"template": {"metadata": {"annotations": {"kubectl.kubernetes.io/restartedAt": "%s"}}}}}`, time.Now().Format("20060102150405"))
 	// deployment, err := deploymentsClient.Patch(ctx, deployment_name, k8stypes.StrategicMergePatchType, []byte(data), v1.PatchOptions{})
 
-	_, err = deploymentsClient.Patch(context.TODO(), deploymentName, "application/strategic-merge-patch+json", []byte(data), metav1.PatchOptions{})
+	// _, err = deploymentsClient.Patch(context.TODO(), deploymentName, "application/strategic-merge-patch+json", []byte(data), metav1.PatchOptions{})
+	_, err = K8s.clientSet.AppsV1().Deployments(namespace).Patch(context.TODO(), deploymentName, "application/strategic-merge-patch+json", []byte(data), metav1.PatchOptions{})
 	if err != nil {
 		logger.Error("重启Deployment失败" + err.Error())
 		return errors.New("重启Deployment失败" + err.Error())

@@ -1,8 +1,6 @@
 package user
 
 import (
-
-
 	"k8s-platform/logic"
 	"k8s-platform/middle"
 	"k8s-platform/model"
@@ -27,8 +25,8 @@ type userController struct{}
 // @ID /user/login
 // @Accept  json
 // @Produce  json
-// @Param polygon body dto.AdminLoginInput true "body"
-// @Success 200 {object} middleware.Response{data=dto.AdminLoginOut} "success"
+// @Param polygon body model.AdminLoginInput true "body"
+// @Success 200 {object} middle.ResponseData{data=model.AdminLoginOut} "success"
 // @Router /api/user/login [post]
 func (u *userController) Login(ctx *gin.Context) {
 	// params := new(model.AdminLoginInput)
@@ -62,7 +60,7 @@ func (u *userController) Login(ctx *gin.Context) {
 // @ID /user/loginout
 // @Accept  json
 // @Produce  json
-// @Success 200 {object} middleware.Response{data=dto.AdminLoginOut} "success"
+// @Success 200 {object} middle.ResponseData{data=model.AdminLoginOut} "success"
 // @Router /api/user/loginout [get]
 func (u *userController) LoginOut(ctx *gin.Context) {
 	claims, exists := ctx.Get("claims")
@@ -84,7 +82,7 @@ func (u *userController) LoginOut(ctx *gin.Context) {
 // @Security  ApiKeyAuth
 // @accept    application/json
 // @Produce   application/json
-// @Success   200  {object}  middleware.Response{data=model.SysUser,msg=string}  "获取用户信息"
+// @Success   200  {object}  middle.ResponseData{data=model.SysUser,msg=string}  "获取用户信息"
 // @Router    /api/user/getinfo [get]
 func (u *userController) GetUserInfo(ctx *gin.Context) {
 	clalms, err := utils.GetClaims(ctx)
@@ -106,8 +104,8 @@ func (u *userController) GetUserInfo(ctx *gin.Context) {
 // @Security  ApiKeyAuth
 // @accept    application/json
 // @Produce   application/json
-// @Param     data  body      dto.SetUserAuth          true  "角色ID"
-// @Success   200   {object}  middleware.Response{msg=string}  "设置用户权限"
+// @Param     data  body      model.SetUserAuth          true  "角色ID"
+// @Success   200   {object}  middle.ResponseData{msg=string}  "设置用户权限"
 // @Router    /api/user/{id}/set_auth [put]
 func (u *userController) SetUserAuthority(ctx *gin.Context) {
 	uid, err := utils.ParseInt(ctx.Param("id"))
@@ -147,7 +145,7 @@ func (u *userController) SetUserAuthority(ctx *gin.Context) {
 // @Security  ApiKeyAuth
 // @accept    application/json
 // @Produce   application/json
-// @Success   200   {object}  middleware.Response{msg=string}  "删除用户"
+// @Success   200   {object}  middle.ResponseData{msg=string}  "删除用户"
 // @Router    /api/user/{id}/delete_user [delete]
 func (u *userController) DeleteUser(ctx *gin.Context) {
 	uid, err := utils.ParseInt(ctx.Param("id"))
@@ -168,8 +166,8 @@ func (u *userController) DeleteUser(ctx *gin.Context) {
 // @Summary   用户修改密码
 // @Security  ApiKeyAuth
 // @Produce  application/json
-// @Param     data  body      dto.ChangeUserPwdInput    true  "用户ID, 原密码, 新密码"
-// @Success   200   {object}  middleware.Response{msg=string}  "用户修改密码"
+// @Param     data  body      model.ChangeUserPwdInput    true  "用户ID, 原密码, 新密码"
+// @Success   200   {object}  middle.ResponseData{msg=string}  "用户修改密码"
 // @Router    /api/user/{id}/change_pwd [post]
 func (u *userController) ChangePassword(ctx *gin.Context) {
 	uid, err := utils.ParseInt(ctx.Param("id"))
@@ -197,7 +195,7 @@ func (u *userController) ChangePassword(ctx *gin.Context) {
 // @Summary   重置用户密码
 // @Security  ApiKeyAuth
 // @Produce  application/json
-// @Success   200   {object}  middleware.Response{msg=string}  "重置用户密码"
+// @Success   200   {object}  middle.ResponseData{msg=string}  "重置用户密码"
 // @Router    /api/user/{id}/reset_pwd [put]
 func (u *userController) ResetPassword(ctx *gin.Context) {
 	uid, err := utils.ParseInt(ctx.Param("id"))

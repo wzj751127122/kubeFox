@@ -1,11 +1,11 @@
 package main
 
 import (
-	"net/http"
+
 	"os"
 
 	"k8s-platform/app"
-	"k8s-platform/service"
+
 
 	"github.com/gin-gonic/gin"
 	// "github.com/wonderivan/logger"
@@ -39,10 +39,10 @@ func main() {
 	// fmt.Println(d)
 
 	//启动websocket
-	go func() {
-		http.HandleFunc("/ws", service.Terminal.WsHandler)
-		http.ListenAndServe(":9999", nil)
-	}()
+	// go func() {
+	// 	http.HandleFunc("/ws", service.Terminal.WsHandler)
+	// 	http.ListenAndServe(":9999", nil)
+	// }()
 	//运行
 	// err = r.Run(fmt.Sprintf(":%d", viper.GetInt("app.port")))
 	// if err != nil {

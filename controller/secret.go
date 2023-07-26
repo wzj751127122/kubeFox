@@ -22,7 +22,7 @@ type secret struct{}
 // @Produce      json
 // @Param        name       query  string  true  "Secret名称"
 // @Param        namespace    query  string  true  "命名空间"
-// @Success       200  {object}  middleware.Response"{"code": 200, msg="","data": "删除成功}"
+// @Success       200  {object}  middle.ResponseData"{"code": 200, msg="","data": "删除成功}"
 // @Router       /api/k8s/Secret/del [delete]
 func (s *secret) DeleteSecret(ctx *gin.Context) {
 	params := new(struct {
@@ -53,7 +53,7 @@ func (s *secret) DeleteSecret(ctx *gin.Context) {
 // @Param        name       query  string  true  "无状态控制器名称"
 // @Param        namespace  query  string  true  "命名空间"
 // @Param        content    query  string  true  "更新内容"
-// @Success       200  {object}  middleware.Response"{"code": 200, msg="","data": "更新成功}"
+// @Success       200  {object}  middle.ResponseData"{"code": 200, msg="","data": "更新成功}"
 // @Router       /api/k8s/secret/update [put]
 func (s *secret) UpdateSecret(ctx *gin.Context) {
 	params := new(struct {
@@ -85,7 +85,7 @@ func (s *secret) UpdateSecret(ctx *gin.Context) {
 // @Param        namespace  query  string  false  "命名空间"
 // @Param        page         query  int     false  "页码"
 // @Param        limit        query  int     false  "分页限制"
-// @Success       200  {object}  middleware.Response"{"code": 200, msg="","data": }"
+// @Success       200  {object}  middle.ResponseData"{"code": 200, msg="","data": }"
 // @Router       /api/k8s/Secret/list [get]
 func (s *secret) GetSecretList(ctx *gin.Context) {
 	params := new(struct {
@@ -118,7 +118,7 @@ func (s *secret) GetSecretList(ctx *gin.Context) {
 // @Produce      json
 // @Param        name       query  string  true  "Secret名称"
 // @Param        namespace  query  string  true  "命名空间"
-// @Success      200        {object}  middleware.Response"{"code": 200, msg="","data":v1.Deployment }"
+// @Success      200        {object}  middle.ResponseData"{"code": 200, msg="","data":v1.Deployment }"
 // @Router       /api/k8s/Secret/detail [get]
 func (s *secret) GetSecretDetail(ctx *gin.Context) {
 	params := new(struct {

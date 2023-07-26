@@ -23,7 +23,7 @@ type node struct{}
 // @Param        filter_name  query  string  false  "过滤"
 // @Param        page         query  int     false  "页码"
 // @Param        limit        query  int     false  "分页限制"
-// @Success       200  {object}  middleware.Response"{"code": 200, msg="","data": service.NameSpaceResp}"
+// @Success       200  {object}  middle.ResponseData"{"code": 200, msg="","data": service.NameSpaceResp}"
 // @Router       /api/k8s/node/list [get]
 func (n *node) GetNodeList(ctx *gin.Context) {
 	params := new(struct {
@@ -55,7 +55,7 @@ func (n *node) GetNodeList(ctx *gin.Context) {
 // @Accept       json
 // @Produce      json
 // @Param        name  query  string  true  "node名称"
-// @Success      200        {object}  middleware.Response"{"code": 200, msg="","data":data }"
+// @Success      200        {object}  middle.ResponseData"{"code": 200, msg="","data":data }"
 // @Router       /api/k8s/node/detail [get]
 func (n *node) GetNodeDetail(ctx *gin.Context) {
 	params := new(struct {
