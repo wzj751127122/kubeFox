@@ -52,7 +52,7 @@ func (w *workflow)CreateWorkflow(data *WorkflowCreate)(err error)  {
 		Deployment: data.Name,
 		Service: getServiceName(data.Name),
 		Ingress: ingressName,
-		Type: data.Type,
+		ServiceType: data.Type,
 	}
 	//调用dao层
 	err = dao.Workflow.CreateWorkflow(workflow)
@@ -165,6 +165,7 @@ func (w *workflow)DelById(id int) error {
 }
 
 func delworkflowRes(workflow *model.Workflow)(err error)  {
+	
 
 	err = Deployment.DeleteDeployment(workflow.Name,workflow.Namespace)
 	if err != nil {
@@ -175,7 +176,7 @@ func delworkflowRes(workflow *model.Workflow)(err error)  {
 	if err != nil {
 		return err
 	}
-	if workflow.Type == "Ingress" {
+	if workflow.ServiceType == "Ingress" {
 		err = Ingress.DeleteIngress(getIngressName(workflow.Name),workflow.Namespace)
 		if err != nil {
 			return err

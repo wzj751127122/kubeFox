@@ -5,9 +5,9 @@ import (
 	"k8s-platform/controller"
 	"k8s-platform/controller/authory"
 	"k8s-platform/controller/menu"
+	"k8s-platform/controller/swagger"
 	"k8s-platform/controller/user"
 	"k8s-platform/middle"
-
 
 	"k8s.io/apimachinery/pkg/util/sets"
 )
@@ -26,7 +26,7 @@ func InitRouter(opt *opention.Options) {
 	// 需要操作记录
 	apiGroup.Use(middle.OperationRecord())
 	{
-		// other.NewSwaggarRoute(apiGroup)
+		swagger.NewSwaggarRoute(apiGroup)
 		controller.KubeApiRouter(apiGroup)
 		menu.MenuinitRoutes(apiGroup)
 		authory.AuthorityinitRoutes(apiGroup)
