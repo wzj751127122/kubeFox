@@ -48,7 +48,7 @@ npm run serve
 ```
 git clone https://github.com/wzj751127122/kubeFox.git
 
-cd kubemanage
+cd kubeFox
 
 go mod tidy
 
