@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"k8s-platform/app/opention"
 	"k8s-platform/config"
-	"k8s-platform/middle"
+	// "k8s-platform/controller"
 	"k8s-platform/router"
 	"k8s-platform/service"
 	"k8s-platform/utils"
@@ -17,7 +17,6 @@ import (
 
 	"os"
 
-	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
@@ -71,8 +70,8 @@ func Run(opt *opention.Options) error {
 	// 初始化 APIs 路由
 	// router.InstallRouters(opt)
 	//初始化gin
-	r := gin.Default()
-	r.Use(middle.Cors())
+	// r := gin.Default()
+	// r.Use(middle.Cors())
 	// r.Use(middle.JWTAuthMiddleware())
 	//初始化路由
 	// Router.InitApiRouter(r)
@@ -126,6 +125,12 @@ func runServer(opt *opention.Options) {
 		Addr:    fmt.Sprintf(":%d", viper.GetInt("app.port")),
 		Handler: opt.GinEngine,
 	}
+	// go func() {
+	// 	http.HandleFunc("/api/k8s/pod/webshell", service.Terminal.WsHandler)
+	// 	// http.HandleFunc("/ws/hello", hello)
+	// 	http.ListenAndServe(":9999", nil)
+	// }()
+
 
 	go func() {
 		// 开启一个goroutine启动服务

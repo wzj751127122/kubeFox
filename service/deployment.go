@@ -33,16 +33,27 @@ type DeploymentNp struct {
 // 定义deploymnetcreat结构体，用于创建deploymen属性
 
 type DeployCreate struct {
-	Name          string            `json:"name"`
-	Namespace     string            `json:"namespace"`
-	Image         string            `json:"image"`
-	Cpu           string            `json:"cpu"`
-	Memery        string            `json:"memery"`
-	HealthPath    string            `json:"health_path"`
-	Replicas      int32             `json:"replicas"`
-	ContainerPort int32             `json:"container_port"`
-	Label         map[string]string `json:"label"`
-	HealthCheck   bool              `json:"health_check"`
+	// Name          string            `json:"name"`
+	// Namespace     string            `json:"namespace"`
+	// Image         string            `json:"image"`
+	// Cpu           string            `json:"cpu"`
+	// Memery        string            `json:"memery"`
+	// HealthPath    string            `json:"health_path"`
+	// Replicas      int32             `json:"replicas"`
+	// ContainerPort int32             `json:"container_port"`
+	// Label         map[string]string `json:"label"`
+	// HealthCheck   bool              `json:"health_check"`
+	//DeploymentNameNS
+	Name          string            `json:"name" form:"name" comment:"无状态控制器名称" binding:"required"`
+	NameSpace     string            `json:"namespace" form:"namespace" comment:"命名空间" binding:"required"`
+	Replicas      int32             `json:"replicas" binding:"required" comment:"副本数"`
+	Image         string            `json:"image" binding:"required" comment:"镜像名"`
+	Label         map[string]string `json:"label" binding:"" comment:"标签"`
+	Cpu           string            `json:"cpu" binding:"" comment:"Cpu限制"`
+	Memory        string            `json:"memory" binding:"" comment:"内存限制"`
+	ContainerPort int32             `json:"container_port" binding:"" comment:"容器端口"`
+	HealthCheck   bool              `json:"health_check" binding:"" comment:"健康检查开关"`
+	HealthPath    string            `json:"health_path" binding:"" comment:"Http健康检查路径"`
 }
 
 // 获取deployment列表
@@ -122,7 +133,7 @@ func (d *deployment) CreateDeployment(data *DeployCreate) (err error) {
 	deployment := &appsv1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      data.Name,
-			Namespace: data.Namespace,
+			Namespace: data.NameSpace,
 			Labels:    data.Label,
 		},
 		Spec: appsv1.DeploymentSpec{
@@ -192,16 +203,16 @@ func (d *deployment) CreateDeployment(data *DeployCreate) (err error) {
 	// 定义容器的limit和request资源
 	deployment.Spec.Template.Spec.Containers[0].Resources.Limits = map[corev1.ResourceName]resource.Quantity{
 		corev1.ResourceCPU:    resource.MustParse(data.Cpu),
-		corev1.ResourceMemory: resource.MustParse(data.Memery),
+		corev1.ResourceMemory: resource.MustParse(data.Memory),
 	}
 
 	deployment.Spec.Template.Spec.Containers[0].Resources.Requests = map[corev1.ResourceName]resource.Quantity{
 		corev1.ResourceCPU:    resource.MustParse(data.Cpu),
-		corev1.ResourceMemory: resource.MustParse(data.Memery),
+		corev1.ResourceMemory: resource.MustParse(data.Memory),
 	}
 
 	// 调用sdk创建deployment
-	_, err = K8s.clientSet.AppsV1().Deployments(data.Namespace).Create(context.TODO(), deployment, metav1.CreateOptions{})
+	_, err = K8s.clientSet.AppsV1().Deployments(data.NameSpace).Create(context.TODO(), deployment, metav1.CreateOptions{})
 	if err != nil {
 		logger.Error("创建deployment失败" + err.Error())
 		return errors.New("创建deployment失败" + err.Error())

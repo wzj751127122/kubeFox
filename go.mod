@@ -7,6 +7,7 @@ require (
 	github.com/casbin/gorm-adapter/v3 v3.18.0
 	github.com/fatih/color v1.13.0
 	github.com/fsnotify/fsnotify v1.6.0
+	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/gorilla/websocket v1.4.2

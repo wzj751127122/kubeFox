@@ -18,6 +18,9 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 		// 	c.Next()
 		// 	return
 		// }
+		if AlwaysAllowPath.Has(c.Request.URL.Path) {
+			return
+		}
 		if len(c.Request.URL.String()) == 15 && c.Request.URL.String()[0:15] == "/api/user/login" {
 			c.Next()
 			return

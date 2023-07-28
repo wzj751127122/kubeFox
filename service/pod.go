@@ -9,7 +9,7 @@ import (
 	"io"
 
 
-	"github.com/spf13/viper"
+
 	"github.com/wonderivan/logger"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -133,7 +133,7 @@ func (p *pod) GetPodContainer(podName, namespace string) (containers []string, e
 func (p *pod) GetPodLog(containerName, podName, namespace string) (log string, err error) {
 
 
-	limit := int64(viper.GetInt("app.PodLogTailLine"))
+	limit := int64(200)
 
 	// 创建日志请求
 	req := K8s.clientSet.CoreV1().Pods(namespace).GetLogs(podName, &corev1.PodLogOptions{

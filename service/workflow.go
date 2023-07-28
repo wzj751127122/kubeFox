@@ -23,7 +23,7 @@ type WorkflowCreate struct{
 	NodePort      int32             `json:"node_port"`
 	Image         string            `json:"image"`
 	Cpu           string            `json:"cpu"`
-	Memery        string            `json:"memery"`
+	Memory        string            `json:"memery"`
 	HealthPath    string            `json:"health_path"`
 	Replicas      int32             `json:"replicas"`
 	Label         map[string]string `json:"label"`
@@ -72,12 +72,12 @@ func createWorkflowRes(data *WorkflowCreate)(err error)  {
 	var serviceType string
 	dc := &DeployCreate{
 		Name: data.Name,
-		Namespace: data.Namespace,
+		NameSpace: data.Namespace,
 		Replicas: data.Replicas,
 		Image: data.Image,
 		Label: data.Label,
 		Cpu: data.Cpu,
-		Memery: data.Memery,
+		Memory: data.Memory,
 		ContainerPort: data.ContainerPort,
 		HealthCheck: data.HealthCheck,
 		HealthPath: data.HealthPath,

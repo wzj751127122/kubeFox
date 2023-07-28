@@ -1,11 +1,9 @@
 package main
 
 import (
-
 	"os"
 
 	"k8s-platform/app"
-
 
 	"github.com/gin-gonic/gin"
 	// "github.com/wonderivan/logger"
@@ -35,10 +33,16 @@ func main() {
 		os.Exit(1)
 	}
 
+	// r,err := utils.GenSaltPassword("zlovew1015")
+	// if err != nil {
+	// 	return
+	// }
+	// fmt.Println(r)
+
 	// d,_:=dao.Workflow.GetWorkflow("","blog",10,1)
 	// fmt.Println(d)
 
-	//启动websocket
+	// 启动websocket
 	// go func() {
 	// 	http.HandleFunc("/ws", service.Terminal.WsHandler)
 	// 	http.ListenAndServe(":9999", nil)

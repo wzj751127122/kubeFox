@@ -83,7 +83,7 @@ func (s *serviceController) DeleteService(ctx *gin.Context) {
 // @Router       /api/k8s/service/update [put]
 func (s *serviceController) UpdateService(ctx *gin.Context) {
 	params := new(struct {
-		Content   string `json:"content" binding:"required" comment:"更新内容"`
+		Content   string `json:"content" form:"content" binding:"required" comment:"更新内容"`
 		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" binding:"required"`
 	})
 	err := ctx.ShouldBind(params)

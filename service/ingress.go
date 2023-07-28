@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
+
 	"github.com/wonderivan/logger"
 	nwv1 "k8s.io/api/networking/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -144,6 +146,7 @@ func (i *ingress) UpdateIngress(namespace, content string) error {
 
 func (i *ingress) GetIngressList(filterName, namespace string, limit, page int) (*ingressResp, error) {
 	ingressList, err := K8s.clientSet.NetworkingV1().Ingresses(namespace).List(context.TODO(), metav1.ListOptions{})
+	fmt.Println(ingressList)
 	if err != nil {
 		logger.Error("获取ingress失败" + err.Error())
 		return nil, errors.New("获取ingress失败" + err.Error())

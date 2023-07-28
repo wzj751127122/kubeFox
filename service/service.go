@@ -68,7 +68,7 @@ func (s *service) CreateService(data *ServiceCreate) (err error) {
 				{
 					Name:     data.Name,
 					Port:     data.Port,
-					Protocol: "tcp",
+					Protocol: "TCP",
 					TargetPort: intstr.IntOrString{
 						Type:   0,
 						IntVal: data.ContainerPort,
@@ -77,6 +77,7 @@ func (s *service) CreateService(data *ServiceCreate) (err error) {
 			},
 			Selector: data.Label,
 		},
+		Status: coreV1.ServiceStatus{},
 	}
 	//默认为clusterIP，此处判断NodePort
 	if data.NodePort != 0 && data.Type == "NodePort" {

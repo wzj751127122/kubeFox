@@ -27,6 +27,7 @@ type AppConfig struct{
 
 	PodLogTailLine			int  `mapstructure:"pod_logtail"`
 	LogMode					bool  `mapstructure:"log_mode"`
+	WebSocketListenAddr  string `mapstructure:"webSocketListenAddr"`
 
 }
 

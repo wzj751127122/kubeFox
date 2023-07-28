@@ -5,6 +5,7 @@ app:
   version: "1.0"
   pod_logtail: 3000
   log_mode: false
+  webSocketListenAddr: ""
   # start_time: "2023-01-02"
   # machine_id: 1
 

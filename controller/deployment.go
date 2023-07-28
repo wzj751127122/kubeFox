@@ -56,8 +56,10 @@ func (d *deployment) GetDeploymentsDetail(c *gin.Context) {
 	//处理传入的变量
 
 	params := new(struct {
-		DeploymentName string `form:"deployment_name"`
-		Namespace      string `form:"namespace"`
+		// DeploymentName string `form:"deployment_name"`
+		// Namespace      string `form:"namespace"`
+		Name      string `json:"deployment_name" form:"deployment_name" comment:"无状态控制器名称" binding:"required"`
+		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" binding:"required"`
 	})
 
 	err := c.ShouldBind(params)
@@ -68,7 +70,7 @@ func (d *deployment) GetDeploymentsDetail(c *gin.Context) {
 		return
 	}
 
-	data, err := service.Deployment.GetDeploymentDetail(params.DeploymentName, params.Namespace)
+	data, err := service.Deployment.GetDeploymentDetail(params.Name, params.NameSpace)
 	if err != nil {
 
 		logger.Error("获取deployment详情失败" + err.Error())
@@ -88,7 +90,7 @@ func (d *deployment) CreateDeployment(c *gin.Context) {
 		err          error
 	)
 
-	err = c.ShouldBindJSON(deployCreate)
+	err = c.ShouldBind(deployCreate)
 	if err != nil {
 
 		logger.Error("bind失败" + err.Error())
@@ -113,12 +115,15 @@ func (d *deployment) CreateDeployment(c *gin.Context) {
 func (d *deployment) ScaleDeployment(c *gin.Context) {
 
 	params := new(struct {
-		DeploymentName string `json:"deployment_name"`
-		Namespace      string `json:"namespace"`
-		ScaleNum       int    `json:"scale_num"`
+		// DeploymentName string `json:"deployment_name"`
+		// Namespace      string `json:"namespace"`
+		// ScaleNum       int    `json:"scale_num"`
+		DeploymentName string `json:"deployment_name" form:"deployment_name" comment:"无状态控制器名称" binding:"required"`
+		Namespace      string `json:"namespace" form:"namespace" comment:"命名空间" binding:"required"`
+		ScaleNum       int    `json:"scale_num" form:"scale_num" comment:"期望副本数" binding:"required"`
 	})
 
-	err := c.ShouldBindJSON(params)
+	err := c.ShouldBind(params)
 	if err != nil {
 
 		logger.Error("bind失败" + err.Error())
@@ -150,11 +155,13 @@ func (d *deployment) DeleteDeployment(c *gin.Context) {
 	//处理传入的变量
 
 	params := new(struct {
-		DeploymentName string `json:"deployment_name"`
-		Namespace      string `json:"namespace"`
+		// DeploymentName string `json:"deployment_name"`
+		// Namespace      string `json:"namespace"`
+		DeploymentName string `json:"deployment_name" form:"deployment_name" comment:"无状态控制器名称" binding:"required"`
+		Namespace      string `json:"namespace" form:"namespace" comment:"命名空间" binding:"required"`
 	})
 
-	err := c.ShouldBindJSON(params)
+	err := c.ShouldBind(params)
 	if err != nil {
 
 		logger.Error("bind失败" + err.Error())
@@ -194,7 +201,7 @@ func (d *deployment) RestartDeployment(c *gin.Context) {
 		return
 	}
 
-	err = service.Deployment.RestartDeployment(params.Name,params.NameSpace)
+	err = service.Deployment.RestartDeployment(params.Name, params.NameSpace)
 	if err != nil {
 
 		logger.Error("重启deployment失败" + err.Error())
@@ -212,18 +219,20 @@ func (d *deployment) RestartDeployment(c *gin.Context) {
 // 更新deployment
 func (d *deployment) UpdateDeployment(c *gin.Context) {
 	params := new(struct {
-		content   string `json:"content"`
-		namespace string `json:"namespace"`
+		// content   string `json:"content"`
+		// namespace string `json:"namespace"`
+		NameSpace string `json:"namespace" form:"namespace" comment:"命名空间" binding:"required"`
+		Content   string `json:"content" form:"content" binding:"required" comment:"更新内容"`
 	})
 
-	err := c.ShouldBindJSON(params)
+	err := c.ShouldBind(params)
 	if err != nil {
 		logger.Error("Bind绑定参数失败" + err.Error())
 		middle.ResponseError(c, middle.CodeServerBusy)
 		return
 	}
 
-	err = service.Deployment.UpdateDeployment(params.content, params.namespace)
+	err = service.Deployment.UpdateDeployment(params.Content, params.NameSpace)
 	if err != nil {
 
 		logger.Error("更新deployment失败" + err.Error())

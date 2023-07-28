@@ -4,7 +4,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
+	"k8s-platform/model"
+
+	// "k8s-platform/model"
+
 	"net/http"
 	"time"
 
@@ -13,7 +16,6 @@ import (
 
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/client-go/kubernetes/scheme"
-	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/tools/remotecommand"
 )
 
@@ -21,53 +23,54 @@ var Terminal terminal
 
 type terminal struct{}
 
-func (t *terminal) WsHandler(w http.ResponseWriter, r *http.Request){
+func (t *terminal) WsHandler(webShellStr *model.WebShellStr, w http.ResponseWriter, r *http.Request) error {
 
-	config, err := clientcmd.BuildConfigFromFlags("", clientcmd.RecommendedHomeFile)
-	if err != nil {
-		logger.Error("加载配置文件失败" + err.Error())
-		return
-	}
+	// config, err := clientcmd.BuildConfigFromFlags("", clientcmd.RecommendedHomeFile)
+	// if err != nil {
+	// 	logger.Error("加载配置文件失败" + err.Error())
+	// 	return err
+	// }
 	//解析前端入参，获取namespace，podname，container
-	err = r.ParseForm()
-	if err != nil {
-		logger.Error("解析失败" + err.Error())
-		return
-	}
+	// err = r.ParseForm()
+	// if err != nil {
+	// 	logger.Error("解析失败" + err.Error())
+	// 	return
+	// }
 
-	namespace := r.Form.Get("namespace")
-	podName := r.Form.Get("pod_name")
-	containerName := r.Form.Get("container_name")
-	logger.Info("exec pod: %s,container_name: %s,namespace: %s", podName, containerName, namespace)
+	// namespace := r.Form.Get("namespace")
+	// podName := r.Form.Get("pod_name")
+	// containerName := r.Form.Get("container_name")
+	// logger.Info("exec pod: %s,container_name: %s,namespace: %s", podName, containerName, namespace)
 
-	pty, err := NewTerminalSession(w, r, nil)
+	pty, err := NewTerminalSession(w, r)
 	if err != nil {
 		logger.Error("实例化terminalSession失败" + err.Error())
-		return
+		return err
 	}
 
 	defer func() {
 		logger.Info("关闭terminalSession")
-		pty.Close()
+		_ = pty.Close()
 	}()
 
-	req := K8s.clientSet.CoreV1().RESTClient().Post().Resource("pods").Name(podName).Namespace(namespace).SubResource("exec").VersionedParams(
+	req := K8s.clientSet.CoreV1().RESTClient().Post().Resource("pods").Name(webShellStr.Pod).Namespace(webShellStr.Namespace).SubResource("exec").VersionedParams(
 		&v1.PodExecOptions{
 			Stdin:     true,
 			Stdout:    true,
 			Stderr:    true,
 			TTY:       true,
-			Container: containerName,
+			Container: webShellStr.Container,
 			Command:   []string{"/bin/sh"},
 		}, scheme.ParameterCodec)
 
 	logger.Info("exec post request url:", req)
 
 	//升级SPDY协议
-	executor, err := remotecommand.NewSPDYExecutor(config, "POST", req.URL())
+	executor, err := remotecommand.NewSPDYExecutor(K8s.Config, "POST", req.URL())
+	// executor, err := remotecommand.NewSPDYExecutor(config, "POST", req.URL())
 	if err != nil {
 		logger.Error("建立SPDY失败" + err.Error())
-		return
+		return err
 	}
 
 	err = executor.Stream(remotecommand.StreamOptions{
@@ -80,11 +83,77 @@ func (t *terminal) WsHandler(w http.ResponseWriter, r *http.Request){
 	if err != nil {
 		logger.Error("执行 pod 命令失败" + err.Error())
 		//将报错返回web
-		pty.Write([]byte("执行 pod 命令失败" + err.Error()))
+		_, _ = pty.Write([]byte("执行 pod 命令失败" + err.Error()))
 		pty.Done()
 	}
-
+	return nil
 }
+
+// func (t *terminal) WsHandler(w http.ResponseWriter, r *http.Request){
+
+// 	// config, err := clientcmd.BuildConfigFromFlags("", clientcmd.RecommendedHomeFile)
+// 	// if err != nil {
+// 	// 	logger.Error("加载配置文件失败" + err.Error())
+// 	// 	return err
+// 	// }
+// 	//解析前端入参，获取namespace，podname，container
+// 	err := r.ParseForm()
+// 	if err != nil {
+// 		logger.Error("解析失败" + err.Error())
+// 		return
+// 	}
+
+// 	namespace := r.Form.Get("namespace")
+// 	podName := r.Form.Get("pod_name")
+// 	containerName := r.Form.Get("container_name")
+// 	logger.Info("exec pod: %s,container_name: %s,namespace: %s", podName, containerName, namespace)
+
+// 	pty, err := NewTerminalSession(w, r)
+// 	if err != nil {
+// 		logger.Error("实例化terminalSession失败" + err.Error())
+// 		return
+// 	}
+
+// 	defer func() {
+// 		logger.Info("关闭terminalSession")
+// 		_ = pty.Close()
+// 	}()
+
+// 	req := K8s.clientSet.CoreV1().RESTClient().Post().Resource("pods").Name(podName).Namespace(namespace).SubResource("exec").VersionedParams(
+// 		&v1.PodExecOptions{
+// 			Stdin:     true,
+// 			Stdout:    true,
+// 			Stderr:    true,
+// 			TTY:       true,
+// 			Container: containerName,
+// 			Command:   []string{"/bin/sh"},
+// 		}, scheme.ParameterCodec)
+
+// 	logger.Info("exec post request url:", req)
+
+// 	//升级SPDY协议
+// 	executor, err := remotecommand.NewSPDYExecutor(K8s.Config, "POST", req.URL())
+// 	// executor, err := remotecommand.NewSPDYExecutor(config, "POST", req.URL())
+// 	if err != nil {
+// 		logger.Error("建立SPDY失败" + err.Error())
+// 		return
+// 	}
+
+// 	err = executor.Stream(remotecommand.StreamOptions{
+// 		Stdin:             pty,
+// 		Stdout:            pty,
+// 		Stderr:            pty,
+// 		Tty:               true,
+// 		TerminalSizeQueue: pty,
+// 	})
+// 	if err != nil {
+// 		logger.Error("执行 pod 命令失败" + err.Error())
+// 		//将报错返回web
+// 		_, _ = pty.Write([]byte("执行 pod 命令失败" + err.Error()))
+// 		pty.Done()
+// 	}
+// 	return
+// }
 
 //消息内容
 
@@ -104,20 +173,28 @@ type TerminalSession struct {
 
 //初始化一个websocket upgrade类型的对象，用于http升级成为ws协议
 
-var upgrader = func() websocket.Upgrader {
+// var upgrader = func() websocket.Upgrader {
 
-	upgrader := websocket.Upgrader{}
-	upgrader.HandshakeTimeout = time.Second * 2
-	upgrader.CheckOrigin = func(r *http.Request) bool {
-		return true
-	}
-	return upgrader
-}()
+// 	upgrader := websocket.Upgrader{}
+// 	upgrader.HandshakeTimeout = time.Second * 2
+// 	upgrader.CheckOrigin = func(r *http.Request) bool {
+// 		return true
+// 	}
+// 	return upgrader
+// }()
 
 // 创建terminalSession类型的对象并返回
-func NewTerminalSession(w http.ResponseWriter, r *http.Request, responseHander http.Header) (*TerminalSession, error) {
-
-	conn, err := upgrader.Upgrade(w, r, responseHander)
+func NewTerminalSession(w http.ResponseWriter, r *http.Request) (*TerminalSession, error) {
+	// 初始化 Upgrader 类型的对象，用于http协议升级为 websocket 协议
+	upgrader := &websocket.Upgrader{
+		HandshakeTimeout: time.Second * 2,
+		// 检测请求来源
+		CheckOrigin: func(r *http.Request) bool {
+			return true
+		},
+		Subprotocols: []string{r.Header.Get("Sec-WebSocket-Protocol")},
+	}
+	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		return nil, errors.New("升级websocket失败" + err.Error())
 	}
@@ -133,27 +210,27 @@ func NewTerminalSession(w http.ResponseWriter, r *http.Request, responseHander h
 func (t *TerminalSession) Read(p []byte) (int, error) {
 	_, message, err := t.ws.ReadMessage()
 	if err != nil {
-		log.Panicf("read message err ,%v", err)
-		return 0, err
+		// log.Panicf("read message err ,%v", err)
+		return copy(p, "\u0004"), err
 	}
 	var msg TerminalMessage
 	err = json.Unmarshal(message, &msg)
 	if err != nil {
-		log.Panicf("read parse message err ,%v", err)
-		return 0, err
+		// log.Panicf("read parse message err ,%v", err)
+		return copy(p, "\u0004"), err
 	}
 
 	switch msg.Operation {
 	case "stdin":
-		return copy(p, []byte(msg.Data)), nil
+		return copy(p, msg.Data), nil
 	case "resize":
 		t.sizeChan <- remotecommand.TerminalSize{Width: msg.Cols, Height: msg.Rows}
 		return 0, nil
 	case "ping":
 		return 0, nil
 	default:
-		log.Printf("unknow message type %s", msg.Operation)
-		return 0, fmt.Errorf("unknow message type %s", msg.Operation)
+		// log.Printf("unknow message type %s", msg.Operation)
+		return copy(p, "\u0004"), fmt.Errorf("unknown message type")
 	}
 
 }
@@ -166,12 +243,12 @@ func (t *TerminalSession) Write(p []byte) (int, error) {
 		Data:      string(p),
 	})
 	if err != nil {
-		log.Panicf("write parse message err ,%v", err)
+		// log.Panicf("write parse message err ,%v", err)
 		return 0, err
 	}
 	err = t.ws.WriteMessage(websocket.TextMessage, msg)
 	if err != nil {
-		log.Panicf("write message err ,%v", err)
+		// log.Panicf("write message err ,%v", err)
 		return 0, err
 	}
 	return len(p), nil
@@ -182,8 +259,8 @@ func (t *TerminalSession) Done() {
 	close(t.doneChan)
 }
 
-func (t *TerminalSession) Close() {
-	t.ws.Close()
+func (t *TerminalSession) Close() error {
+	return t.ws.Close()
 }
 
 // resize方法，是否退出终端
