@@ -14,17 +14,27 @@ func init() {
 }
 
 type Workflow struct {
-	ID       uint       `json:"id" gorm:"primaryKey"`
-	CreateAt *time.Time `json:"created_at"`
-	UpdateAt *time.Time `json:"updated_at"`
-	DeleteAt *time.Time `json:"deleted_at"`
-
-	Name        string `json:"name"`
-	Namespace   string `json:"namespace"`
-	Deployment  string `json:"deployment"`
-	Ingress     string `json:"ingress"`
-	Service     string `json:"service"`
-	Replicas    int32  `json:"replicas"`
+	// ID       uint       `json:"id" gorm:"primaryKey"`
+	// CreateAt *time.Time `json:"created_at"`
+	// UpdateAt *time.Time `json:"updated_at"`
+	// DeleteAt *time.Time `json:"deleted_at"`
+	CreatedAt time.Time      `json:"created_at" gorm:"column:created_at"`
+    UpdatedAt time.Time      `json:"updated_at" gorm:"column:updated_at"`
+    DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
+	// Name        string `json:"name"`
+	// Namespace   string `json:"namespace"`
+	// Deployment  string `json:"deployment"`
+	// Ingress     string `json:"ingress"`
+	// Service     string `json:"service"`
+	// Replicas    int32  `json:"replicas"`
+	// ServiceType string `json:"service_type" gorm:"column:service_type"`
+	ID          int    `gorm:"column:id;primary_key;AUTO_INCREMENT;not null" json:"id"`
+	Name        string `json:"name" gorm:"column:name"`
+	NameSpace   string `json:"namespace" gorm:"column:namespace"`
+	Replicas    int32  `json:"replicas" gorm:"column:replicas"`
+	Deployment  string `json:"deployment" gorm:"column:deployment"`
+	Service     string `json:"service" gorm:"column:service"`
+	Ingress     string `json:"ingress" gorm:"column:ingress"`
 	ServiceType string `json:"service_type" gorm:"column:service_type"`
 }
 
