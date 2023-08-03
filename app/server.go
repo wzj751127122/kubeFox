@@ -29,7 +29,7 @@ func NewServerCommand() *cobra.Command {
 		zap.L().Fatal("unable to initialize command options: %v", zap.Any("err", err))
 	}
 	cmd := &cobra.Command{
-		Use:  "kubeFox-run",
+		Use:  "kubeFox",
 		Long: "The kubeFox run controller is a daemon that embeds the core control loops.",
 		Run: func(cmd *cobra.Command, args []string) {
 			if err = opts.Complete(); err != nil {

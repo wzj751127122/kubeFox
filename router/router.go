@@ -29,7 +29,7 @@ func InitRouter(opt *opention.Options) {
 		c.File("static/index.html")
 	})
 	apiGroup := opt.GinEngine.Group("/api")
-	// middle.InstallMiddlewares(apiGroup)
+	middle.InstallMiddlewares(apiGroup)
 	// opt.GinEngine.LoadHTMLFiles("./static/index.html")
 
 	//安装不需要操作记录路由
