@@ -19,6 +19,30 @@ func GetClaims(c *gin.Context) (*CustomClaims, error) {
 	return claims, err
 }
 
+// func getUser(c *gin.Context) (*model.SysUser, error) {
+// 	// 从请求头中获取JWT token
+// 	token := c.Request.Header.Get("token")
+// 	if token == "" {
+// 		return nil, errors.New("请求未携带token,无权限访问")
+// 	}
+// 	// 解析JWT token
+// 	claims, err := JwtToken.ParseToken(token)
+// 	if err != nil {
+// 		// handle error
+// 	}
+
+// 	// 从JWT token中获取用户信息
+// 	user := &model.SysUser{
+// 		UUID:        claims.UUID,
+// 		ID:          claims.ID,
+// 		UserName:    claims.Username,
+// 		NickName:    claims.NickName,
+// 		AuthorityId: claims.AuthorityId,
+// 	}
+
+// 	return user,err
+// }
+
 // GetUserAuthorityId 从Gin的Context中获取从jwt解析出来的用户角色id
 func GetUserAuthorityId(c *gin.Context) (uint, error) {
 	if claims, exists := c.Get("claims"); !exists {

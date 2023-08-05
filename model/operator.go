@@ -57,6 +57,7 @@ func (s *SysOperationRecord) IsInitData(ctx context.Context, db *gorm.DB) (bool,
 
 func (s *SysOperationRecord) TableCreated(ctx context.Context, db *gorm.DB) bool {
 	return db.WithContext(ctx).Migrator().HasTable(&s)
+	
 }
 
 func (s *SysOperationRecord) TableName() string {

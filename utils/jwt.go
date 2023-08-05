@@ -6,8 +6,6 @@ import (
 
 	"github.com/golang-jwt/jwt/v4"
 	uuid "github.com/satori/go.uuid"
-
-
 )
 
 var JwtToken jwttoken
@@ -39,6 +37,9 @@ type BaseClaims struct {
 	AuthorityId uint
 }
 
+// type SysUser struct {
+
+// }
 // CustomClaims 自定义token中携带的信息
 type CustomClaims struct {
 	BaseClaims
@@ -118,7 +119,6 @@ func (j *jwttoken) GenerateToken(baseClaims BaseClaims) (string, error) {
 // 	}
 // 	return nil, errors.New("invalid token")
 // }
-
 
 // ParseToken 解析token函数
 func (j *jwttoken) ParseToken(tokenString string) (claims *CustomClaims, err error) {

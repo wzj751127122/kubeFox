@@ -4,6 +4,8 @@ import (
 	"context"
 	"k8s-platform/app/opention"
 	"k8s-platform/model"
+
+
 )
 
 // type Operation struct {
@@ -19,7 +21,8 @@ func OperationSave(ctx context.Context, in *model.SysOperationRecord) error {
 	return opention.DB.WithContext(ctx).Create(in).Error
 }
 
-func OperationDelete(ctx context.Context, in *model.SysOperationRecord) error {
+func OperationDelete(ctx context.Context,  in *model.SysOperationRecord) error {
+
 	return opention.DB.WithContext(ctx).Delete(in).Error
 }
 
@@ -27,9 +30,6 @@ func OperationDeleteList(ctx context.Context, in []int) error {
 	return opention.DB.WithContext(ctx).Delete(&[]model.SysOperationRecord{}, "id in (?)", in).Error
 }
 
-// func NewOperation(db *gorm.DB) *operation {
-// 	return &operation{db: db}
-// }
 
 func OperationPageList(ctx context.Context, params *model.OperationListInput) ([]*model.SysOperationRecord, int64, error) {
 	var total int64 = 0
