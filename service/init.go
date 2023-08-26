@@ -16,11 +16,20 @@ type k8s struct {
 
 func (k *k8s) Init() error {
 
-	//clientset
-	config, err := clientcmd.BuildConfigFromFlags("", clientcmd.RecommendedHomeFile)
+	config, err := rest.InClusterConfig()
 	if err != nil {
-		return err
+		// If failed, use the kubeconfig file
+		config, err = clientcmd.BuildConfigFromFlags("", clientcmd.RecommendedHomeFile)
+		if err != nil {
+			return err
+		}
 	}
+
+	// //clientset
+	// config, err := clientcmd.BuildConfigFromFlags("", clientcmd.RecommendedHomeFile)
+	// if err != nil {
+	// 	return err
+	// }
 	clientset, err := kubernetes.NewForConfig(config)
 	if err != nil {
 		return err
