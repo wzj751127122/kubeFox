@@ -1,0 +1,44 @@
+kind: pipeline
+type: kubernetes
+name: kubefox
+
+steps:
+- name: build
+  image: plugins/docker
+  settings:
+    repo: wzj751127122/kubefox
+    tags: build-${DRONE_BUILD_NUMBER}
+    dockerfile: Dockerfile
+    context: .
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+  
+- name: update-config
+  image: alpine/git
+  commands:
+    - |
+     sed -i 's|image: wzj751127122/kubefox:.*|image: wzj751127122/kubefox:build-${DRONE_BUILD_NUMBER}|' ./argcd/kubefox.yaml
+
+- name: push-config
+  image: alpine/git
+  environment:
+    GIT_USERNAME:
+      from_secret: git_username
+    GIT_PASSWORD:
+      from_secret: git_password
+  commands:
+    - git config --global user.name "Allen"
+    - git config --global user.email "2449312564@qq.com"
+    - git remote set-url origin http://$GIT_USERNAME:$GIT_PASSWORD@172.16.244.128:31664/admin123/k8s-plantform.git
+    - git add ./argcd/kubefox.yaml
+    - git commit -m "Update image tag to build-${DRONE_BUILD_NUMBER}"
+    - git push origin HEAD
+
+
+- name: notify-argocd
+  image: curlimages/curl:latest
+  commands:
+    - |
+     curl -X POST -H "Content-Type: application/json" -d '{"name":"kube-fox"}' http://172.16.244.128:31154/api/v1/applications/kube-fox/sync
